@@ -1,0 +1,77 @@
+@import 'normalize';
+@import 'skeleton';
+
+// Table of Contents
+//
+// - Feature-by-feature BEM
+// - Media Queries
+
+// Feature BEM
+.app__nav-brand {height: 54px; margin: 0; padding: 10px 0px; position: relative;}
+.app__nav-brand__logo {width: 50px; display:inline-block; margin: 0 2px; padding: 0px;}
+.app__nav-brand__app-name {display: inline-block; margin: 0px; padding: 0px;}
+.app__nav-brand__app-name a {
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+  position: absolute;
+  top: 50%;
+  height: 54px;
+  margin-top: -19px;
+}
+.app__nav-brand__app-name a:focus {text-decoration: underline;}
+.app__nav-brand__app-name a:hover {text-decoration: underline;}
+
+.app__nav-links {
+  list-style-type: none;
+  margin: 0px;
+  padding: 10px 10px;
+  border-top: 1px solid #f7f7f7;
+  border-bottom: 1px solid #f7f7f7;
+}
+
+.app__nav-links__item {
+  margin: 5px 5px;
+}
+
+.app__nav-links__item a:link {color: #FF4C6D; text-decoration: none}
+.app__nav-links__item a:visited {color: #FF4C6D; text-decoration: none}
+.app__nav-links__item a:focus {color: #cfcfcf; text-decoration: underline}
+.app__nav-links__item a:hover {color: #cfcfcf; text-decoration: underline}
+.app__nav-links__item a:active {color: #8ED4FA; text-decoration: none}
+
+
+.index__title {
+  margin: 0;
+  padding: 0;
+}
+
+// MEDIA QUERIES
+
+
+/* Larger than mobile */
+@media (min-width: 400px) {
+}
+
+/* Too large for charts to include interactive legend */
+@media(max-width: 425px) {
+  .nv-axis text {font-size: 11px;}
+}
+
+/* Larger than phablet */
+@media (min-width: 550px) {
+  .app__nav-links {float: right; border-top: 0px; border-bottom: 0px; padding: 21px 10px 10px 10px;}
+  .app__nav-links__item {display: inline;}
+}
+
+/* Larger than tablet */
+@media (min-width: 750px) {
+}
+
+/* Larger than desktop */
+@media (min-width: 1000px) {
+}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {
+}
