@@ -1,3 +1,24 @@
-<h2 id="title">Welcome to Ember</h2>
-
+<div class='container'>
+  <div class='row'>
+    <div class='five columns'>
+      <div class='app__nav-brand'>
+        <img class='app__nav-brand__logo'  src='assets/images/capmetrics-logo.png'/>
+        <div class='app__nav-brand__app-name'><a href='/'>Capmetrics</a></div>
+      </div>
+    </div>
+    <div class='seven columns'>
+        <ul class='app__nav-links'>
+          <li class='app__nav-links__item'><a href='#about'>SYSTEM</a></li>
+          <li class='app__nav-links__item'><a href='#services'>ROUTES</a></li>
+          <li class='app__nav-links__item'><a href='#ideas'>ABOUT</a></li>
+        </ul>
+    </div>
+  </div>
+  <div class='row'>
+    <h5 class='index__title'>System Ridership</h5>
+    <div class='twelve columns'>
+      {{viz-area-trend}}
+    </div>
+  </div>
+</div>
 {{outlet}}
