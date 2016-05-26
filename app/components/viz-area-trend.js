@@ -1,127 +1,60 @@
-import Ember from 'ember';
-
 /**
- * Transforms ISO 8601 timestamps provided by Gol API into
- * more easily readable strings for chart x-axis ticks.
+ * Visualizes trends with an area chart.
+ *
+ * @module components/viz-area-trend
  */
-let convertTimeStamps = function(d){
-  var isotime = d[0];
-  var format = d3.time.format("%Y-%m-%dT%H:%M:%S%Z");
-  return format.parse(isotime);
-}
+import Ember from 'ember';
+import toStackedChart from 'capmetrics-web/utils/stacked-chart';
+import colorizeTrends from 'capmetrics-web/utils/colorize-trends';
+import fillEmptyPoints from 'capmetrics-web/utils/fill-empty-points';
 
-let createGraphLoader = function(target, data, chart) {
-  return function loader(){
-    d3.select(target).append('svg')
-      .datum(data)
-      .transition().duration(500)
-      .call(chart);
-    var manager = nv.utils.windowResize(function() {
-      let size = nv.utils.windowSize();
-      if (size.width < 768) {
-        chart.showControls(false);
-        chart.showLegend(false);
-      } else {
-        chart.showControls(true);
-        chart.showLegend(true);
-      }
-      chart.update();
-    });
-    chart.clear = manager.clear;
-    return chart;
-  }
-}
-
-
-let createChart = function(title, selector, data) {
-  let chart = nv.models
-            .stackedAreaChart()
-            .useInteractiveGuideline(true)
-            .x(function(d) { return d[0] })
-            .y(function(d) { return d[1] })
-            .controlLabels({stacked: "Stacked"})
-            .duration(300);
-  let size = nv.utils.windowSize();
-  if (size.width < 768) {
-    chart.showControls(false);
-    chart.showLegend(false);
-  } else {
-    chart.showControls(true);
-    chart.showLegend(true);
-    chart.legend.vers('furious');
-  }
-  chart.xAxis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-  chart.yAxis.tickFormat(d3.format(',.4f'));
-  chart.margin({
-      top: 10,
-      right: 50,
-      bottom: 10,
-      left: 50
-  });
-  chart.height(140);
-  let target = '#' + selector;
-  nv.addGraph(createGraphLoader(target, data, chart));
-  return chart;
-}
-
-let createLineChart = function(title, selector, values){
-  var chart = nv.models
-                .lineChart()
-                .x(convertTimeStamps)
-                .y(function(d){ return d[1]; })
-                .forceY(0)
-                .showLegend(false)
-                .useInteractiveGuideline(true);
-         //.tickFormat(d3.format(',.1%'))
-         //.axisLabel('Percent');
-    //chart.xAxis
-         //.tickFormat(function(d){
-           //var format = d3.time.format("%Y-%m-%dT%H:%M:%S%Z");
-           //return format.parse(d);
-         //});
-    chart.margin({
-        top: 10,
-        right: 20,
-        bottom: 10,
-        left: 50
-    });
-    chart.height(140)
-    chart.xAxis
-         .tickFormat(function(d){
-            var format = d3.time.format('%x')
-            return format(new Date(d));
-         })
-         .showMaxMin(false);
-    chart.yAxis
-         .tickFormat(function(d){ return d3.round(d) })
-         .ticks(3)
-         .showMaxMin(true);
-  var data = [{'key': title, 'values': values, area: true, fillOpacity:.10}];
-  var target = '#' + selector;
-  nv.addGraph(createGraphLoader(target, data, chart));
-  return chart;
-}
-
-
-
-let SAMPLEDATA = [
-    {"key": "series 1", "values": [ [ 1138683600000 , 27] , [ 1141102800000 , 45] ]},
-    {"key": "series 2", "values": [ [ 1138683600000 , 32] , [ 1141102800000 , 32] ]},
-    {"key": "series 3", "values": [ [ 1138683600000 , 17] , [ 1141102800000 , 7] ]},
-]
-
+/** Exports an extension of Ember's Component class. */
 export default Ember.Component.extend({
-  series: SAMPLEDATA,
-  visualizationId: 'viz1',
-  title: 'CMX Viz 1',
+  /** A D3-powered visualization. */
+  chart: null,
 
-  didInsertElement: function prepareInteractiveUI() {
-    let configuration = {
-      'series': this.get('series'),
-      'selector': this.get('visualizationId'),
-      'title': this.get('title'),
-    };
-    let chart = createChart(this.get('title'), this.get('visualizationId'), this.get('series'));
-    this.set('visualization', chart);
+  /**
+   * The trend models.
+   * @type {Array}
+   */
+  trends: null,
+
+  /**
+  * The name of the CSS id selector where the visualization will be inserted.
+  * @type {String}
+  * */
+  vizId: null,
+
+  /**
+   * The visualization title.
+   * @type {String}
+   */
+  title: null,
+
+  /**
+  * A computed property that transformes the series data.
+  * @inner
+  * @function
+  * @return {Array} An array with *trend* objects containing `key`, `values`, and `color` properties.
+  */
+  vizData: Ember.computed('trends', function(){
+    let models = this.get('trends');
+    let vizReady = []
+    for (let i = 0; i < models.get('length'); i++) {
+      let data = {
+        'key': models.objectAt(i).get('serviceType'),
+        'values': models.objectAt(i).get('trend')
+      }
+      vizReady.push(data);
+    }
+    let colorized = colorizeTrends(vizReady);
+    let filled = fillEmptyPoints(colorized);
+    return filled;
+  }),
+
+  /** Inserts the chart */
+  didInsertElement() {
+    let chart = toStackedChart(this.get('title'), this.get('vizId'), this.get('vizData'));
+    this.set('chart', chart);
   }
 });
