@@ -20,9 +20,12 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  app.import('bower_components/d3/d3.min.js');
-  app.import('bower_components/nvd3/build/nv.d3.min.css');
-  app.import('bower_components/nvd3/build/nv.d3.min.js');
+  app.import('bower_components/d3/d3.js');
+ // app.import('bower_components/nvd3/build/nv.d3.min.css');
+ // app.import('bower_components/nvd3/build/nv.d3.js');
+  // Customized version of nvd3
+  app.import('bower_components/customized/nvd3/build/nv.d3.css');
+  app.import('bower_components/customized/nvd3/build/nv.d3.js');
 
   return app.toTree();
 };
