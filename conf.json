@@ -1,0 +1,27 @@
+{
+  "opts": {
+      "encoding": "utf8",
+      "destination": "docs",
+      "readme": "README.md",
+      "recurse": false,
+      "template": "cmx-web-theme"
+  },
+  "tags": {
+      "allowUnknownTags": true,
+      "dictionaries": ["jsdoc","closure"]
+  },
+  "source": {
+      "include": ["app", "app/components", "app/controllers", "app/helpers",
+        "app/models", "app/routes", "app/utils"],
+      "exclude": ["cmx--web-theme", "bower_components", "app/mirage", "node_modules",
+        "public", "seeders", "tests", "tmp", "vendor", "app.js"],
+      "includePattern": ".+\\.js(doc)?$",
+      "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": ["plugins/markdown"],
+  "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false
+  }
+}
+
