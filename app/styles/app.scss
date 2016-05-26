@@ -3,10 +3,22 @@
 
 // Table of Contents
 //
-// - Feature-by-feature BEM
-// - Media Queries
+// 1. Globals
+// 2. Template BEM
+// -- app
+// -- index
+//
+// 3. Media Queries
 
-// Feature BEM
+// Globals
+
+.nvd3 text {font-size: 11px;}
+.nv-axis text {font-size: 11px;}
+
+// Template BEM
+
+.app {min-height: 800px;}
+
 .app__nav-brand {height: 54px; margin: 0; padding: 10px 0px; position: relative;}
 .app__nav-brand__logo {width: 50px; display:inline-block; margin: 0 2px; padding: 0px;}
 .app__nav-brand__app-name {display: inline-block; margin: 0px; padding: 0px;}
@@ -40,23 +52,31 @@
 .app__nav-links__item a:hover {color: #cfcfcf; text-decoration: underline}
 .app__nav-links__item a:active {color: #8ED4FA; text-decoration: none}
 
+.index__service-colors {
+  line-height: 1;
+  text-align: center;
+  display: inline-block;
+}
 
 .index__title {
   margin: 0;
   padding: 0;
 }
 
-// MEDIA QUERIES
+.index__service-color {
+  color: white;
+  display: inline;
+  font-size: 9px;
+  padding: 1px 2px;
+  margin: 0.5px;
+}
 
+// MEDIA QUERIES
 
 /* Larger than mobile */
 @media (min-width: 400px) {
 }
 
-/* Too large for charts to include interactive legend */
-@media(max-width: 425px) {
-  .nv-axis text {font-size: 11px;}
-}
 
 /* Larger than phablet */
 @media (min-width: 550px) {
@@ -66,6 +86,12 @@
 
 /* Larger than tablet */
 @media (min-width: 750px) {
+}
+
+/* Too large for charts to include interactive legend */
+@media (min-width: 768px) {
+  .nv-axis text {font-size: 12px;}
+  .index__service-colors {display: none;}
 }
 
 /* Larger than desktop */
