@@ -1,3 +1,14 @@
+/**
+ * The application's router.
+ *
+ * The handled routes are:
+ *
+ * | **Route**    | **Path**   |
+ * |--------------|------------|
+ * | index        | `/`        |
+ *
+ * @module router
+ */
 import Ember from 'ember';
 import config from './config/environment';
 
@@ -6,6 +17,7 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('index', {path: '/'});
 });
 
 export default Router;
