@@ -13,4 +13,5 @@ export default Ember.Controller.extend({
    * @type {String}
    */
   systemVizSelector: 'system-ridership-viz'
+
 });
