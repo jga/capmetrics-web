@@ -1,7 +1,7 @@
 <div class='row'>
   <div class='twelve columns'>
     <h5 class='index__title'>System Ridership <span style='color: #d3d3d3'>Weekly</span></h5>
-    {{viz-area-trend trends=model vizId=systemVizSelector}}
+    {{viz-area-trend trends=model.trends vizId=systemVizSelector}}
   </div>
 </div>
 <div class='row'>
@@ -23,6 +23,11 @@
       <div class='index__service-color' style='background-color: #1ab2ff;'>UT - RADIALS</div>
       <div class='index__service-color' style='background-color: green'>OTHER</div>
     </div>
+  </div>
+</div>
+<div class='row'>
+  <div class='twelve columns'>
+    {{top-routes topData=model.topRoutes}}
   </div>
 </div>
 {{outlet}}
