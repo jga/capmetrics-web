@@ -18,6 +18,10 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('index', {path: '/'});
+  this.route('route-ridership', {path: '/route-ridership/:route_number'});
+  this.route('routes');
+  this.route('system');
+  this.route('about');
 });
 
 export default Router;
