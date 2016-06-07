@@ -3,14 +3,14 @@
     <div class='five columns'>
       <div class='app__nav-brand'>
         <img class='app__nav-brand__logo'  src='assets/images/capmetrics-logo.png'/>
-        <div class='app__nav-brand__app-name'><a href='/'>Capmetrics</a></div>
+        <div class='app__nav-brand__app-name'>{{#link-to 'index'}}Capmetrics{{/link-to}}</div>
       </div>
     </div>
     <div class='seven columns'>
         <ul class='app__nav-links'>
-          <li class='app__nav-links__item'><a href='#about'>SYSTEM</a></li>
-          <li class='app__nav-links__item'><a href='#services'>ROUTES</a></li>
-          <li class='app__nav-links__item'><a href='#ideas'>ABOUT</a></li>
+          <li class='app__nav-links__item'>{{#link-to 'system'}}SYSTEM{{/link-to}}</li>
+          <li class='app__nav-links__item'>{{#link-to 'routes'}}ROUTES{{/link-to}}</li>
+          <li class='app__nav-links__item'>{{#link-to 'about'}}ABOUT{{/link-to}}</li>
         </ul>
     </div>
   </div>
