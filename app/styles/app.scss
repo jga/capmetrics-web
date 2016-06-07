@@ -3,21 +3,55 @@
 
 // Table of Contents
 //
-// 1. Globals
-// 2. Template BEM
-// -- app
-// -- index
-//
-// 3. Media Queries
+// 1. Sass Vars
+// 2. Globals
+// 3. Template BEM
+// ---- universal blocks
+// ---- about
+// ---- app
+// ---- index
+// ---- route-ridership
+// ---- service-legend
+// ---- service-selector
+// 4. Media Queries
 
-// Globals
+// 1. Sass Vars
+
+$font-size-xl: 28px;
+$font-size-lg: 22px;
+$font-size-md: 16px;
+$font-size-sm: 10px;
+
+// 2. GLOBALS
 
 .nvd3 text {font-size: 11px;}
 .nv-axis text {font-size: 11px;}
 
-// Template BEM
+// 3. TEMPLATE BEM
 
-.app {min-height: 800px;}
+// ---- Universal blocks
+
+.chart-header {
+  font-size: $font-size-md;
+  font-family: Trebuchet MS, Verdana, sans-serif;
+  padding-left: 4px;
+}
+
+.title {
+  margin: 0;
+  padding: 10px 0;
+  font-size: $font-size-xl;
+}
+
+.title--subtle {
+  color: #d3d3d3;
+}
+
+//about template blocks
+.about {max-width: 760px; margin: 0 auto;}
+
+// ---- app template blocks
+.app {min-height: 800px;padding-bottom: 50px;}
 
 .app__nav-brand {height: 54px; margin: 0; padding: 10px 0px; position: relative;}
 .app__nav-brand__logo {width: 50px; display:inline-block; margin: 0 2px; padding: 0px;}
@@ -52,26 +86,66 @@
 .app__nav-links__item a:hover {color: #cfcfcf; text-decoration: underline}
 .app__nav-links__item a:active {color: #8ED4FA; text-decoration: none}
 
-.index__service-colors {
+// ---- route-ridership
+
+.route-ridership__about {
+  font-size: 14px;
+  margin: 0;
+  padding-left: 4px;
+}
+
+.route-ridership__about__fact {
+  margin: 2px 0;
+  padding-left: 4px;
+}
+
+.route-ridership__about__title {
+  font-size: 18px;
+  margin: 2px 0;
+}
+
+// ---- service-legend
+
+.service-legend {
+  display: inline-block;
   line-height: 1;
   text-align: center;
-  display: inline-block;
+  margin-bottom: 20px;
 }
 
-.index__title {
-  margin: 0;
-  padding: 0;
-}
-
-.index__service-color {
+.service-legend__entry {
   color: white;
   display: inline;
-  font-size: 9px;
+  font-size: $font-size-sm;
   padding: 1px 2px;
   margin: 0.5px;
 }
 
-// MEDIA QUERIES
+// ---- service-selector
+
+.service-selector {
+  margin: 20px 0px 10px 0px;
+}
+.service-selector__option {
+  background-color: #FF4C6D;
+  color: white;
+  display: inline-block;
+  font-size: $font-size-md;
+  padding: 4px 8px;
+  margin: 4px;
+}
+
+.service-selector__instructions {
+  padding: 0 0 0 4px;
+}
+
+.service-selector__option a:link {color: white; text-decoration: none}
+.service-selector__option a:visited {color: white; text-decoration: none}
+.service-selector__option a:focus {color: #FFB2BE; text-decoration: underline}
+.service-selector__option a:hover {color: #efefef; text-decoration: underline}
+.service-selector__option a:active {color: #FFB2BE; text-decoration: none}
+
+// 4. MEDIA QUERIES
 
 /* Larger than mobile */
 @media (min-width: 400px) {
@@ -91,7 +165,7 @@
 /* Too large for charts to include interactive legend */
 @media (min-width: 768px) {
   .nv-axis text {font-size: 12px;}
-  .index__service-colors {display: none;}
+  .service-legend__entry {display: none;}
 }
 
 /* Larger than desktop */
