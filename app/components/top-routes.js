@@ -48,11 +48,11 @@ let getContainerHeight = function() {
 let createGraphLoader = function(selector, data, chart) {
 
   // sort keys in ascending alphabetical order
-  data.sort(function(a, b) {
-    if (a.key > b.key) { return 1 };
-    if (a.key < b.key) { return -1 };
-    return 0;
-  });
+  //data.sort(function(a, b) {
+    //if (a.key > b.key) { return 1 };
+    //if (a.key < b.key) { return -1 };
+    //return 0;
+  //});
   chart = configureChart(chart);
   let svgContainerHeight = getContainerHeight();
   return function loader(){
@@ -88,6 +88,20 @@ let loadChart = function(selector, data) {
   return chart;
 }
 
+let colorizeTrends = function(prettyData) {
+  for (let i = 0; i < prettyData.length; i++) {
+    let trend = prettyData[i];
+    let color = '#05487F';
+    if (trend.key === 'saturday') {
+      color = '#29B86F';
+    } else if (trend.key === 'sunday') {
+      color = '#BDBADF';
+    }
+    trend.color = color;
+  }
+  return prettyData;
+}
+
 let prettifyRiderships = function(riderships) {
   let prettyData = Ember.A();
   riderships.forEach(function(ridership){
@@ -107,6 +121,14 @@ let prettifyRiderships = function(riderships) {
       prettyData.pushObject(ridershipTrend);
     }
   })
+  prettyData.sort(function(a, b) {
+    if (a.key === 'weekday') { return -1 };
+    if (a.key === 'saturday' && b.key === 'sunday') {return -1}
+    if (a.key === 'saturday' && b.key === 'weekday') {return 1}
+    if (a.key === 'sunday') { return 1 };
+    return 0;
+  });
+  prettyData = colorizeTrends(prettyData);
   return prettyData;
 }
 
@@ -125,10 +147,15 @@ let loadCharts = function(topTrends, charts) {
 
 export default Ember.Component.extend({
 
-  charts: {},
+  charts: null,
+
+  didInsertElement() {
+    this.set('charts', {})
+  },
 
   didRender(){
     let charts = loadCharts(this.get('topData'), this.get('charts'));
     this.set('charts', charts);
   },
+
 });
