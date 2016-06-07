@@ -1,10 +1,10 @@
 {
   "name": "capmetrics-web",
   "version": "0.0.0",
-  "description": "Small description for capmetrics-web goes here",
+  "description": "Web application featuring visualizations of CMTA performance data.",
   "private": true,
   "directories": {
-    "doc": "doc",
+    "doc": "docs",
     "test": "tests"
   },
   "scripts": {
