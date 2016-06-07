@@ -3,7 +3,9 @@
     "server",
     "document",
     "window",
-    "-Promise"
+    "-Promise",
+    "d3",
+    "nv"
   ],
   "browser": true,
   "boss": true,
