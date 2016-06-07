@@ -1,0 +1,19 @@
+import Ember from 'ember';
+
+export default Ember.Route.extend({
+  actions: {
+    didTransition: function() {
+      window.scrollTo(0,0);
+    }
+  },
+  activate: function() {
+    this._super();
+    window.scrollTo(0,0);
+  },
+  model(params) {
+    return Ember.RSVP.hash({
+      route: this.store.queryRecord('route', {filter: {'route-number': params.route_number}}),
+      services: this.store.findAll('route')
+    });
+  }
+});
