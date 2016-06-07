@@ -1,5 +1,5 @@
-<h5>Top Routes</h5>
+<div class='title'>High-Ridership Routes <span class='title--subtle'>Top 10</span></div>
 {{#each topData as |routeTrend|}}
-  <h6>Route {{routeTrend.routeNumber}} {{routeTrend.routeName}}</h6>
+  <div class='chart-header'>{{routeTrend.routeName}}</div>
   <div id={{routeTrend.selector}}></div>
 {{/each}}
