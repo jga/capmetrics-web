@@ -1,0 +1,14 @@
+<div class='row'>
+  <div class='twelve columns'>
+    <div class='service-selector'>
+      <div class='title'>Routes</div>
+      <p class='service-selector__instructions'>Click link to view a route's performance data</p>
+      {{#each services as |service|}}
+        <div class='service-selector__option'>
+          {{#link-to "route-ridership" service.routeNumber}}{{service.routeName}}{{/link-to}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+{{yield}}
