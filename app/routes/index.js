@@ -27,25 +27,32 @@ let topRouteHandler = function(store) {
                    'selector': selector,
                    'riderships': riderships
                  }
-                 topTrends.pushObject(routeCompendium);
-               }});});})
+                 topTrends.pushObject(routeCompendium);}});});})
          .finally(function() {
            resolve(topTrends);
-         });
-  })
+         });})
 }
 
 /**
  * Exports extension of Ember's Route class.
  */
 export default Ember.Route.extend({
+  activate: function(){
+    this._super();
+    nv.charts = {};
+    nv.graphs = [];
+    nv.logs = {};
+    // and remove listeers for onresize.
+    window.onresize = null;
+  },
   /**
    * The model for the route. The function queries for
    * *all* `system-trend` records and high ridership `daily-ridership` models.
    */
   model() {
     return Ember.RSVP.hash({
-      trends: this.store.findAll('system-trend'),
+      services: this.store.peekAll('route'),
+      trends: this.store.peekAll('system-trend'),
       topRoutes: topRouteHandler(this.store)
     });
   }
