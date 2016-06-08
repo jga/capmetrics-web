@@ -10,7 +10,8 @@
 // ---- about
 // ---- app
 // ---- index
-// ---- route-ridership
+// ---- route-performance
+// ---- route-trends
 // ---- service-legend
 // ---- service-selector
 // 4. Media Queries
@@ -86,22 +87,28 @@ $font-size-sm: 10px;
 .app__nav-links__item a:hover {color: #cfcfcf; text-decoration: underline}
 .app__nav-links__item a:active {color: #8ED4FA; text-decoration: none}
 
-// ---- route-ridership
+// ---- route-performance
 
-.route-ridership__about {
+.route-performance__about {
   font-size: 14px;
   margin: 0;
   padding-left: 4px;
 }
 
-.route-ridership__about__fact {
+.route-performance__about__fact {
   margin: 2px 0;
   padding-left: 4px;
 }
 
-.route-ridership__about__title {
+.route-performance__about__title {
   font-size: 18px;
   margin: 2px 0;
+}
+
+// ---- route-trends
+
+.route-trends__viz {
+  margin: 20px 0px;
 }
 
 // ---- service-legend
