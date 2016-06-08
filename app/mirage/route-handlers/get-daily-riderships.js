@@ -1,26 +1,10 @@
+import serializeDailyRidership from 'capmetrics-web/mirage/serializers/daily-ridership';
 
 let assembleAllModels = function(models){
   let responseCollection = [];
   for (let i = 0; i < models.length; i++) {
     let model = models[i];
-    let resourceObject = { 'id': model.id, 'type': 'daily-riderships' };
-    let attributes = {
-      'calendar-year': model['calendar-year'],
-      'created-on': model['created-on'],
-      'day-of-week': model['day-of-week'],
-      'is-current': model['is-current'],
-      'measurement-timestamp': model['measurement-timestamp'],
-      'ridership': model['ridership'],
-      'season': model['season']
-    }
-    resourceObject['attributes'] = attributes;
-    resourceObject['relationships'] = {
-      'route': {
-        'data': {
-          'type': 'routes', 'id': model['route-id']
-        }
-      }
-    }
+    let resourceObject = serializeDailyRidership(model);
     responseCollection.push(resourceObject);
   }
   return {
@@ -28,14 +12,14 @@ let assembleAllModels = function(models){
   };
 }
 
-let assembleHighRidership = function(){
-  return assembleAllModels();
+let assembleHighRidership = function(models){
+  return assembleAllModels(models);
 }
 
 export default function getDailyRiderships(db, request) {
   if (request.queryParams.hasOwnProperty('high-ridership')) {
     let models = db['daily-riderships'];
-    return assembleAllModels(models);
+    return assembleHighRidership(models);
   }
   else {
     let models = db['daily-riderships'];

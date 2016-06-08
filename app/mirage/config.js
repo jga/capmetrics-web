@@ -5,4 +5,5 @@ export default function() {
   this.get('routes/:route_id', routeHandlers.getRoute);
   this.get('system-trends', routeHandlers.getSystemTrends);
   this.get('daily-riderships', routeHandlers.getDailyRiderships);
+  this.get('service-hour-riderships', routeHandlers.getServiceHourRiderships);
 }

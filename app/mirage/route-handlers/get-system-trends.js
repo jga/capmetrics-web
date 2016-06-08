@@ -1,5 +1,5 @@
 
-export default function getSystemTrends(db, request) {
+export default function (db) {
   let allModels = db['system-trends'];
   let responseCollection = [];
   for (let i = 0; i < allModels.length; i++) {

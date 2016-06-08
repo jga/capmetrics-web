@@ -1,9 +1,12 @@
+import serializeDailyRidership from 'capmetrics-web/mirage/serializers/daily-ridership';
+import serializeServiceHourRidership from 'capmetrics-web/mirage/serializers/service-hour-ridership';
 
-export default function getRoute(db, request) {
-  let responseData = null;
+export default function getModel(db, request) {
+  var response = {meta: {}};
   let routeId = request.params.route_id;
-  let model = db.routes.find(routeId)
+  var model = db.routes.find(routeId);
   if (model) {
+    let included = [];
     let resourceObject = { 'id': model.id, 'type': 'routes' };
     let attributes = {
       'route-number': model['route-number'],
@@ -12,18 +15,34 @@ export default function getRoute(db, request) {
       'is-high-ridership': model['is-high-ridership'],
     }
     resourceObject['attributes'] = attributes;
+    included = [];
     let dailyRidershipsData = [];
-    for (let i = 0; i < model['daily-riderships'].length; i++) {
-      dailyRidershipsData.push({'type': 'daily-riderships', 'id': model['daily-riderships'][i]});
+    let riderships = model['daily-riderships'];
+    for (let i = 0; i < riderships.length; i++) {
+      let id = riderships[i]
+      dailyRidershipsData.push({'type': 'daily-riderships', 'id': id});
+      let relationshipModel = db['daily-riderships'].find(id);
+      let resourceObject = serializeDailyRidership(relationshipModel);
+      included.push(resourceObject);
+    }
+    let serviceHourRidershipsData = [];
+    for (let i = 0; i < model['service-hour-riderships'].length; i++) {
+      let id = model['service-hour-riderships'][i];
+      serviceHourRidershipsData.push({'type': 'service-hour-riderships', 'id': id});
+      let relationshipModel = db['service-hour-riderships'].find(id);
+      let resourceObject = serializeServiceHourRidership(relationshipModel);
+      included.push(resourceObject);
     }
     resourceObject['relationships'] = {
       'daily-riderships': {
         'data': dailyRidershipsData
+      },
+      'service-hour-riderships': {
+        'data': serviceHourRidershipsData
       }
     }
-    responseData = resourceObject;
+    response['data'] = resourceObject;
+    response['included'] =  included;
   }
-  return {
-    'data': responseData
-  }
-};
+  return response;
+}
