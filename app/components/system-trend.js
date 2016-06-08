@@ -37,24 +37,28 @@ export default Ember.Component.extend({
   * @function
   * @return {Array} An array with *trend* objects containing `key`, `values`, and `color` properties.
   */
-  vizData: Ember.computed('trends', function(){
+  vizData: Ember.computed('trends', function() {
     let models = this.get('trends');
-    let vizReady = []
-    for (let i = 0; i < models.get('length'); i++) {
-      let data = {
-        'key': models.objectAt(i).get('serviceType'),
-        'values': models.objectAt(i).get('trend')
+    if (models) {
+      let vizReady = []
+      for (let i = 0; i < models.get('length'); i++) {
+        let data = {
+          'key': models.objectAt(i).get('serviceType'),
+          'values': models.objectAt(i).get('trend')
+        }
+        vizReady.push(data);
       }
-      vizReady.push(data);
+      let colorized = colorizeTrends(vizReady);
+      let filled = fillEmptyPoints(colorized);
+      return filled;
     }
-    let colorized = colorizeTrends(vizReady);
-    let filled = fillEmptyPoints(colorized);
-    return filled;
   }),
 
   /** Inserts the chart */
   didInsertElement() {
-    let chart = toStackedChart(this.get('title'), this.get('vizId'), this.get('vizData'));
-    this.set('chart', chart);
+    if (this.get('vizData')) {
+      let chart = toStackedChart(this.get('title'), this.get('vizId'), this.get('vizData'));
+      this.set('chart', chart);
+    }
   }
 });

@@ -1,6 +1,9 @@
 import Ember from 'ember';
 
 let convertTimeStamps = function(d){
+  //let isotime = d[0];
+  //let format = d3.time.format("%Y-%m-%dT%H:%M:%S%Z");
+  //format.parse(isotime);
   let result = Date.parse(d[0]);
   return result;
 }
@@ -38,13 +41,20 @@ let configureChart = function(chart) {
 let getContainerHeight = function() {
   let size = nv.utils.windowSize();
   if (size.width >= 768) {
-    return 400;
+    return 400
   } else {
     return 300;
   }
 }
 
 let createGraphLoader = function(selector, data, chart) {
+
+  // sort keys in ascending alphabetical order
+  //data.sort(function(a, b) {
+    //if (a.key > b.key) { return 1 };
+    //if (a.key < b.key) { return -1 };
+    //return 0;
+  //});
   chart = configureChart(chart);
   let svgContainerHeight = getContainerHeight();
   return function loader(){
@@ -124,32 +134,29 @@ let prettifyRiderships = function(riderships) {
   return prettyData;
 }
 
-let loadCharts = function(topTrends, charts) {
-  topTrends.forEach(function(routeCompendium) {
-    // Avoid rerendering during each loop in template
-    if (!charts || !charts.hasOwnProperty(routeCompendium.selector)) {
-      //riderships is an array or ridership fact models (e.g. DailyRidership)
-      let prettyData = prettifyRiderships(routeCompendium.riderships);
-      let chart = loadChart(routeCompendium.selector, prettyData);
-      charts[routeCompendium.selector] = chart;
-    }
-  })
-  return charts;
+let chartDailies = function(riderships) {
+  riderships = riderships.sortBy('measurementTimestamp');
+  let prettyData = prettifyRiderships(riderships);
+  loadChart('daily-ridership-trend__viz', prettyData);
+}
+
+let chartHours = function(productivities) {
+  productivities = productivities.sortBy('measurementTimestamp');
+  let prettyProductivityData = prettifyRiderships(productivities);
+  loadChart('service-hour-trend__viz', prettyProductivityData);
 }
 
 export default Ember.Component.extend({
+  header: null,
+  route: null,
 
-  charts: null,
-
-  didInsertElement() {
-    this.set('charts', {})
-  },
-
-  didRender() {
-    if (this.get('topData')){
-      let charts = loadCharts(this.get('topData'), this.get('charts'));
-      this.set('charts', charts);
+  didRender(){
+    d3.selectAll('.nvd3-svg').remove();
+    if (this.get('route')){
+      chartHours(this.get('route.serviceHourRiderships'));
+      chartDailies(this.get('route.dailyRiderships'));
+    } else {
+      this.set('header', 'Data unavailable for this route.');
     }
-  },
-
+  }
 });
