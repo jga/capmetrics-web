@@ -5,20 +5,8 @@ moduleForComponent('service-selector', 'Integration | Component | service select
   integration: true
 });
 
-test('it renders', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
+test('it renders instructions', function(assert) {
   this.render(hbs`{{service-selector}}`);
-
-  assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#service-selector}}
-      template block text
-    {{/service-selector}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
+  let expected = "Click link to view a route's performance data";
+  assert.equal(this.$('.service-selector__instructions').text().trim(), expected);
 });
