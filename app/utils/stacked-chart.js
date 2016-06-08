@@ -23,14 +23,17 @@ let configureChart = function(chart) {
   let marginRight = 50;
   let showControls = false;
   let showLegend = false;
+  let showGuideline = false;
+  let showTooltip = false;
   // adjust settings based on window size
   let size = nv.utils.windowSize();
   if (size.width >= 768) {
-    chartHeight = 350;
-    marginBottom: 50;
+    chartHeight = 400;
+    marginBottom = 50;
     showControls = true;
     showLegend = true;
-    let svgContainerHeight = 400;
+    showGuideline = true;
+    showTooltip = true;
   }
   // set initial render chart design
   chart.margin({
@@ -42,20 +45,28 @@ let configureChart = function(chart) {
   chart.height(chartHeight);
   chart.showControls(showControls);
   chart.showLegend(showLegend);
+  chart.showLegend(showLegend);
+  chart.useInteractiveGuideline(showGuideline);
+  //chart.tooltip.options({'enabled': showTooltip});
+  chart.tooltip.options.enabled = showTooltip;
+  chart.legend.margin({bottom: 20});
   return chart;
 }
 
 let getContainerHeight = function() {
   let size = nv.utils.windowSize();
-  if (size.width >= 768) return 400;
-  return 300;
+  if (size.width >= 768) {
+    return 400;
+  } else {
+    return 300;
+  }
 }
 
 let createGraphLoader = function(selector, data, chart) {
   // sort keys in ascending alphabetical order
   data.sort(function(a, b) {
-    if (a.key > b.key) { return 1 };
-    if (a.key < b.key) { return -1 };
+    if (a.key > b.key) { return 1 }
+    if (a.key < b.key) { return -1 }
     return 0;
   });
   chart = configureChart(chart);
@@ -69,9 +80,9 @@ let createGraphLoader = function(selector, data, chart) {
     let manager = nv.utils.windowResize(function() {
       chart = configureChart(chart);
       chart.update();
-      let svgContainerHeight = getContainerHeight();
-      d3.select('#system-ridership-viz .nvd3-svg')
-        .style({'height': svgContainerHeight + 'px'});
+      let newHeight = getContainerHeight();
+      d3.select(selector + ' .nvd3-svg')
+        .style({'height': newHeight + 'px'});
     });
     chart.clear = manager.clear;
     return chart;
@@ -89,7 +100,6 @@ let createGraphLoader = function(selector, data, chart) {
 export default function(title, selector, data) {
   let chart = nv.models
             .stackedAreaChart()
-            .useInteractiveGuideline(true)
             .x(convertTimeStamps)
             .y(function(d) {return parseInt(d[1]) })
             .controlLabels({stacked: "Stacked"})
