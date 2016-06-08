@@ -1,0 +1,14 @@
+{{route-trends route=model.route header=model.route.routeName}}
+<div class='row'>
+  <div class='twelve columns'>
+    <div class='route-performance__about'>
+      <p class='title'>Route Info</p>
+      <p class='route-performance__about__fact'>Number: {{model.route.routeNumber}}</p>
+      <p class='route-performance__about__fact'>Service Type: {{model.route.serviceType}}</p>
+      <p class='route-performance__about__fact'>Full Name: {{model.route.routeName}}</p>
+      <p class='route-performance__about__fact'>Top 10: {{model.route.isTopRoute}}</p>
+    </div>
+  </div>
+</div>
+{{service-selector services=model.services}}
+{{outlet}}
