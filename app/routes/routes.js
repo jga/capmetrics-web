@@ -12,7 +12,7 @@ export default Ember.Route.extend({
   },
   model() {
     return Ember.RSVP.hash({
-      routes: this.store.findAll('route')
+      routes: this.store.peekAll('route')
     });
   }
 });

@@ -17,7 +17,6 @@ export default Ember.Route.extend({
     return Ember.RSVP.hash({
       services: this.store.findAll('route'),
       trends: this.store.findAll('system-trend'),
-      dailyRiderships: this.store.findAll('daily-ridership')
     });
   }
 });
