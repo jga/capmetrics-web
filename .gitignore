@@ -16,6 +16,7 @@
 /.sass-cache
 /connect.lock
 /coverage/*
+/config/deploy.js
 docs
 /libpeerconnection.log
 npm-debug.log
