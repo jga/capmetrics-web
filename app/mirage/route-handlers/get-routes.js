@@ -14,7 +14,6 @@ var assemblePrimaryData = function(models, db){
     for (let j = 0; j < dailyIdentifiers.length; j++) {
       let resourceIdentifier = dailyIdentifiers[j];
       let dr =  db['daily-riderships'].find(resourceIdentifier.id);
-      window.console.log('DR :: ' + JSON.stringify(dr));
       included.addResourceObject(serializeDailyRidership(dr));
     }
     let hourIdentifiers = relationships['service-hour-riderships']['data'];

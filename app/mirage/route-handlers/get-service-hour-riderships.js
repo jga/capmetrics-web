@@ -33,13 +33,7 @@ let assembleHighRidership = function(models){
 }
 
 export default function (db, request) {
-  if (request.queryParams.hasOwnProperty('high-ridership')) {
-    let models = db['service-hour-riderships'];
-    return assembleHighRidership(models);
-  }
-  else {
-    let models = db['service-hour-riderships'];
-    return assembleAllModels(models);
-  }
+  let models = db['service-hour-riderships'];
+  return assembleAllModels(models);
 }
 

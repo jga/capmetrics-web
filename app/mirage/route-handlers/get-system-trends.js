@@ -1,4 +1,3 @@
-
 export default function (db) {
   let allModels = db['system-trends'];
   let responseCollection = [];
