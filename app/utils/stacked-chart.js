@@ -4,7 +4,7 @@
  * @module utils/stacked-chart
  */
 
- // Transforms ISO 8601 timestamps provided by Gol API into
+ // Transforms ISO 8601 timestamps provided by Capmetrics API into
  // more easily readable strings for chart x-axis ticks.
 let convertTimeStamps = function(d){
   //let isotime = d[0];
@@ -72,20 +72,29 @@ let createGraphLoader = function(selector, data, chart) {
   chart = configureChart(chart);
   let svgContainerHeight = getContainerHeight();
   return function loader(){
-    d3.select(selector).append('svg')
-      .datum(data)
-      .transition().duration(500)
-      .call(chart)
-      .style({'height': svgContainerHeight + 'px'});
-    let manager = nv.utils.windowResize(function() {
-      chart = configureChart(chart);
-      chart.update();
-      let newHeight = getContainerHeight();
-      d3.select(selector + ' .nvd3-svg')
-        .style({'height': newHeight + 'px'});
-    });
-    chart.clear = manager.clear;
-    return chart;
+    try {
+      d3.select(selector).append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart)
+        .style({'height': svgContainerHeight + 'px'});
+      let manager = nv.utils.windowResize(function() {
+        chart = configureChart(chart);
+        chart.update();
+        let newHeight = getContainerHeight();
+        d3.select(selector + ' .nvd3-svg')
+          .style({'height': newHeight + 'px'});
+      });
+      chart.clear = manager.clear;
+      return chart;
+    } catch (e) {
+      if (e instanceof TypeError) {
+        console.log('TypeError for ' + selector);
+      } else {
+        console.log('Error for ' + selector);
+      }
+      console.log(e);
+    }
   }
 }
 
