@@ -94,6 +94,9 @@ let colorizeTrends = function(prettyData) {
   return prettyData;
 }
 
+// Organizes data into days of week, sorts the days of week
+// in expected order, and colorizes (adds a color property and value)
+// to each ridership trend object
 let prettifyRiderships = function(riderships) {
   let prettyData = Ember.A();
   riderships.forEach(function(ridership){
