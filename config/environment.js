@@ -14,9 +14,13 @@ module.exports = function(environment) {
     },
 
     APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
-    }
+      API_HOST: 'http://127.0.0.1:4200'
+    },
+
+    contentSecurityPolicy: {
+      'default-src': "'none'",
+      'connect-src': "'self' api.capmetrics.org"
+    },
   };
 
   if (environment === 'development') {
@@ -40,7 +44,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    ENV.APP.API_HOST = 'https://api.capmetrics.org';
   }
 
   return ENV;
