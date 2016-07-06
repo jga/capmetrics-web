@@ -8,8 +8,8 @@ export default Model.extend({
   routeName: attr('string'),
   serviceType: attr('string'),
   isHighRidership: attr('boolean'),
-  dailyRiderships: hasMany('daily-ridership', {async: false}),
-  serviceHourRiderships: hasMany('service-hour-ridership', {async: false}),
+  dailyRiderships: hasMany('daily-ridership'),
+  serviceHourRiderships: hasMany('service-hour-ridership'),
 
   isTopRoute: Ember.computed('isHighRidership', function() {
     if (this.get('isHighRidership')){
