@@ -11,11 +11,11 @@ import Ember from 'ember';
 export default Ember.Route.extend({
   /**
    * The model for the route. The function queries for
-   * *all* `system-trend` records and high ridership `daily-ridership` models.
+   * *all* `system-trend` records and *all* `route-label` models.
    */
   model() {
     return Ember.RSVP.hash({
-      services: this.store.findAll('route'),
+      routeLabels: this.store.findAll('route-label'),
       trends: this.store.findAll('system-trend'),
     });
   }
