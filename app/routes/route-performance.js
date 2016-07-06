@@ -18,7 +18,7 @@ export default Ember.Route.extend({
   model(params) {
     return Ember.RSVP.hash({
       route: this.store.queryRecord('route', {filter: {'route-number': params.route_number}}),
-      services: this.store.peekAll('route')
+      routeLabels: this.store.peekAll('route-label')
     });
   }
 });
