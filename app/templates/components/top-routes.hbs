@@ -1,5 +1,5 @@
 <div class='title'>Top 10 <span class='title--subtle'>Rides by Day of Week</span></div>
-{{#each topData as |routeTrend|}}
-  <div class='chart-header'>{{routeTrend.routeName}}</div>
-  <div id={{routeTrend.selector}}></div>
+{{#each routeCompendiums as |routeCompendium|}}
+  <div class='chart-header'>{{routeCompendium.routeName}}</div>
+  <div id={{routeCompendium.selector}}></div>
 {{/each}}

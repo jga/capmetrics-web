@@ -97,17 +97,17 @@ let colorizeTrends = function(prettyData) {
 let prettifyRiderships = function(riderships) {
   let prettyData = Ember.A();
   riderships.forEach(function(ridership){
-    let ridershipTrend = prettyData.findBy('key', ridership.get('dayOfWeek'));
+    let ridershipTrend = prettyData.findBy('key', ridership.dayOfWeek);
     if (ridershipTrend) {
-      ridershipTrend['values'].pushObject([ridership.get('measurementTimestamp'), ridership.get('ridership')])
+      ridershipTrend['values'].pushObject([ridership.measurementTimestamp, ridership.ridership])
     } else {
       let starterValues = Ember.A()
       starterValues.pushObject([
-        ridership.get('measurementTimestamp'),
-        ridership.get('ridership')
+        ridership.measurementTimestamp,
+        ridership.ridership
       ]);
       let ridershipTrend = {
-        'key': ridership.get('dayOfWeek'),
+        'key': ridership.dayOfWeek,
         'values': starterValues
       }
       prettyData.pushObject(ridershipTrend);
@@ -124,11 +124,11 @@ let prettifyRiderships = function(riderships) {
   return prettyData;
 }
 
-let loadCharts = function(topTrends, charts) {
-  topTrends.forEach(function(routeCompendium) {
+let loadCharts = function(routeCompendiums, charts) {
+  routeCompendiums.forEach(function(routeCompendium) {
     // Avoid rerendering during each loop in template
     if (!charts || !charts.hasOwnProperty(routeCompendium.selector)) {
-      //riderships is an array or ridership fact models (e.g. DailyRidership)
+      //riderships is an array of ridership fact JSON object (e.g. DailyRidership)
       let prettyData = prettifyRiderships(routeCompendium.riderships);
       let chart = loadChart(routeCompendium.selector, prettyData);
       charts[routeCompendium.selector] = chart;
@@ -146,8 +146,8 @@ export default Ember.Component.extend({
   },
 
   didRender() {
-    if (this.get('topData')){
-      let charts = loadCharts(this.get('topData'), this.get('charts'));
+    if (this.get('routeCompendiums')) {
+      let charts = loadCharts(this.get('routeCompendiums'), this.get('charts'));
       this.set('charts', charts);
     }
   },
