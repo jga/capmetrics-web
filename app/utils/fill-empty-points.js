@@ -18,24 +18,26 @@ let createTimestampInventory = function(datum) {
 }
 
 let repairSeries = function(data, timestampInventory) {
-  let currentTimestamps = new Set();
-  for (let i = 0; i < data.values.length; i++) {
-    let dataPairing = data.values[i];
-    //First value is an ISO 8601 timestamp
-    currentTimestamps.add(dataPairing[0]);
-  }
-  let difference = new Set();
-  timestampInventory.forEach(function(t) {
-    if (!currentTimestamps.has(t)) {
-      difference.add(t);
+  if (data.values instanceof Array) {
+    let currentTimestamps = new Set();
+    for (let i = 0; i < data.values.length; i++) {
+      let dataPairing = data.values[i];
+      //First value is an ISO 8601 timestamp
+      currentTimestamps.add(dataPairing[0]);
     }
-  });
-  for (let missing of difference) {
-    data.values.push([missing, 0]);
+    let difference = new Set();
+    timestampInventory.forEach(function(t) {
+      if (!currentTimestamps.has(t)) {
+        difference.add(t);
+      }
+    });
+    for (let missing of difference) {
+      data.values.push([missing, 0]);
+    }
+    data.values.sort(function(a, b) {
+      return Date.parse(a[0]) - Date.parse(b[0]);
+    })
   }
-  data.values.sort(function(a, b) {
-    return Date.parse(a[0]) - Date.parse(b[0]);
-  })
   return data;
 }
 
