@@ -10,6 +10,7 @@
 // ---- about
 // ---- app
 // ---- index
+// ---- ridership-sparklines
 // ---- route-performance
 // ---- route-trends
 // ---- service-legend
@@ -86,6 +87,26 @@ $font-size-sm: 10px;
 .app__nav-links__item a:focus {color: #cfcfcf; text-decoration: underline}
 .app__nav-links__item a:hover {color: #cfcfcf; text-decoration: underline}
 .app__nav-links__item a:active {color: #8ED4FA; text-decoration: none}
+
+// ---- ridership-sparklines
+
+.ridership-sparkline {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.ridership-sparkline__impact {
+  fill: #f00;
+  stroke: none;
+}
+
+.ridership-sparkline__y-axis path,
+.ridership-sparkline__y-axis line {
+  fill: none;
+  stroke: silver;
+  shape-rendering: crispEdges;
+}
 
 // ---- route-performance
 
