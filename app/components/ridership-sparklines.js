@@ -15,7 +15,8 @@ let loadSparkline = function(selector, sparkDataset) {
   var sparkHeight = containerHeight - sparkMargins.top - sparkMargins.bottom;
   var sparkWidth = containerWidth - sparkMargins.left - sparkMargins.right;
 
-  var sparkDateFormatter = d3.time.format("%d-%b-%y");
+  //var sparkDateFormatter = d3.time.format("%d-%b-%y");
+  var sparkDateFormatter = d3.time.format.iso();
 
   var sparkX = d3.time.scale()
                  .domain(d3.extent(sparkDataset, function(d) { return sparkDateFormatter.parse(d.date); }))
@@ -24,23 +25,43 @@ let loadSparkline = function(selector, sparkDataset) {
   var yExtent = d3.extent(sparkDataset, function(d) { return d.value; })
 
   var sparkY = d3.scale.linear()
-                 .domain(yExtent)
+                 .domain([0, yExtent[1]])
                  .range([sparkHeight, 0]);
-
-  var sparkXAxis = d3.svg.axis()
-      .scale(sparkX)
-      .orient("bottom");
 
   var sparkYAxis = d3.svg.axis()
       .scale(sparkY)
       .orient("left")
-      .tickValues([yExtent[0], (((yExtent[1] - yExtent[0])/2) + yExtent[0]), yExtent[1]]);
+      .tickValues([0, Math.round((yExtent[1]/2)), yExtent[1]])
+      .tickFormat(function(d) {
+        if (d > 1000) {
+          return (d/1000).toFixed(2) + 'k';
+        } else {
+          return d;
+        }
+      })
 
   var sparkline = d3.svg.line()
       .x(function(d) { return sparkX(sparkDateFormatter.parse(d.date)); })
       .y(function(d) { return sparkY(d.value); });
 
-  var sparkSVG = d3.select(selector).append("svg")
+  var impactFormatter = d3.format(",");
+  var rawLatestValue = sparkDataset[sparkDataset.length - 1].value;
+  var latestValue = impactFormatter(rawLatestValue);
+  var impact = function() {
+    let ridershipValue = sparkDataset[sparkDataset.length - 1].value * 0.10;
+    let squareRoot = Math.sqrt(ridershipValue);
+    if (squareRoot < 1) {
+      return 2;
+    } else if (squareRoot > 10) {
+      return 10;
+    } else {
+      return Math.round(squareRoot);
+    }
+  }
+  var latestValueX = sparkX(sparkDateFormatter.parse(sparkDataset[sparkDataset.length - 1].date)) + impact() + 2;
+
+  var targetElement = '#' + selector;
+  var sparkSVG = d3.select(targetElement).append("svg")
               .attr("width", containerWidth)
               .attr("height", containerHeight)
             .append("g")
@@ -55,24 +76,14 @@ let loadSparkline = function(selector, sparkDataset) {
        .attr('class', 'ridership-sparkline__impact')
        .attr('cx', sparkX(sparkDateFormatter.parse(sparkDataset[sparkDataset.length - 1].date)))
        .attr('cy', sparkY(sparkDataset[sparkDataset.length - 1].value))
-       .attr('r', function() {
-         let ridershipValue = sparkDataset[sparkDataset.length - 1].value * 0.10;
-         let impact = Math.sqrt(ridershipValue);
-         if impact < 1 {
-          return 1;
-         } else if impact > 10 {
-          return 10;
-         } else {
-          return impact;
-         }
-       })
+       .attr('r', impact)
        .attr('opacity', 0.75)
 
   sparkSVG.append("text")
        .attr('class', 'ridership-sparkline__latest-value')
-       .attr('x', (sparkX(sparkDateFormatter.parse(sparkDataset[sparkDataset.length - 1].date))) + 7)
+       .attr('x', latestValueX)
        .attr('y', (sparkY(sparkDataset[sparkDataset.length - 1].value)) + 3)
-       .text(sparkDataset[sparkDataset.length - 1].value);
+       .text(latestValue);
 
   sparkSVG.append("g")
         .attr("class", "ridership-sparkline__y-axis")
@@ -96,9 +107,8 @@ let loadSparklines = function(routeCompendiums, sparklines) {
       sparklines[routeCompendium.selector] = sparkline;
     }
   })
-  return charts;
+  return sparklines;
 }
-
 
 export default Ember.Component.extend({
   sparklines: null,
@@ -113,4 +123,15 @@ export default Ember.Component.extend({
       this.set('sparklines', sparklines);
     }
   },
+
+  willDestroyElement() {
+    // remove d3 svg
+    if (this.get('sparklines')) {
+      var self = this;
+      Object.keys(this.get('sparklines')).forEach(function(key){
+        self.get('sparklines')[key].select('svg').remove();
+      })
+    }
+  }
+
 });
