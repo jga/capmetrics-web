@@ -1,6 +1,6 @@
 <div class='row'>
   <div class='twelve columns'>
-    {{system-trend trends=model vizId=systemVizSelector}}
+    {{system-trend trends=model.systemTrends vizId=systemVizSelector}}
   </div>
 </div>
 <div class='row'>
@@ -10,7 +10,10 @@
 </div>
 <div class='row'>
   <div class='twelve columns'>
-    {{ridership-sparklines compendiums=compendiums}}
+    <div class='title'>System Routes <span class='title--subtle'>Rides by Day of Week</span></div>
+    <div class='system__ridership-sparklines'>
+      {{ridership-sparklines compendiums=model.compendiums}}
+    </div>
   </div>
 </div>
 {{outlet}}
