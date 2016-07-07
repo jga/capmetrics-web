@@ -1,1 +1,12 @@
+{{#each compendiums as |compendium|}}
+  <div class='ridership-sparkline-container'>
+    <div class='ridership-sparkline__route-name'>
+      {{compendium.routeName}}
+      <span class='ridership-sparkline__more'>
+        [{{#link-to "route-performance" compendium.routeNumber}}MORE{{/link-to}}]
+      </span>
+    </div>
+    <div id={{compendium.selector}}></div>
+  </div>
+{{/each}}
 {{yield}}

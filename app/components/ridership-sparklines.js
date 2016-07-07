@@ -22,7 +22,7 @@ let loadSparkline = function(selector, sparkDataset) {
                  .domain(d3.extent(sparkDataset, function(d) { return sparkDateFormatter.parse(d.date); }))
                  .range([0, sparkWidth]);
 
-  var yExtent = d3.extent(sparkDataset, function(d) { return d.value; })
+  var yExtent = d3.extent(sparkDataset, function(d) { return d.ridership; })
 
   var sparkY = d3.scale.linear()
                  .domain([0, yExtent[1]])
@@ -42,13 +42,13 @@ let loadSparkline = function(selector, sparkDataset) {
 
   var sparkline = d3.svg.line()
       .x(function(d) { return sparkX(sparkDateFormatter.parse(d.date)); })
-      .y(function(d) { return sparkY(d.value); });
+      .y(function(d) { return sparkY(d.ridership); });
 
   var impactFormatter = d3.format(",");
-  var rawLatestValue = sparkDataset[sparkDataset.length - 1].value;
+  var rawLatestValue = sparkDataset[sparkDataset.length - 1].ridership;
   var latestValue = impactFormatter(rawLatestValue);
   var impact = function() {
-    let ridershipValue = sparkDataset[sparkDataset.length - 1].value * 0.10;
+    let ridershipValue = sparkDataset[sparkDataset.length - 1].ridership * 0.10;
     let squareRoot = Math.sqrt(ridershipValue);
     if (squareRoot < 1) {
       return 2;
@@ -75,14 +75,14 @@ let loadSparkline = function(selector, sparkDataset) {
   sparkSVG.append('circle')
        .attr('class', 'ridership-sparkline__impact')
        .attr('cx', sparkX(sparkDateFormatter.parse(sparkDataset[sparkDataset.length - 1].date)))
-       .attr('cy', sparkY(sparkDataset[sparkDataset.length - 1].value))
+       .attr('cy', sparkY(sparkDataset[sparkDataset.length - 1].ridership))
        .attr('r', impact)
        .attr('opacity', 0.75)
 
   sparkSVG.append("text")
        .attr('class', 'ridership-sparkline__latest-value')
        .attr('x', latestValueX)
-       .attr('y', (sparkY(sparkDataset[sparkDataset.length - 1].value)) + 3)
+       .attr('y', (sparkY(sparkDataset[sparkDataset.length - 1].ridership)) + 3)
        .text(latestValue);
 
   sparkSVG.append("g")
