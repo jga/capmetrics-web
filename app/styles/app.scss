@@ -15,6 +15,7 @@
 // ---- route-trends
 // ---- service-legend
 // ---- service-selector
+// ---- system
 // 4. Media Queries
 
 // 1. Sass Vars
@@ -49,7 +50,7 @@ $font-size-sm: 10px;
   color: #d3d3d3;
 }
 
-//about template blocks
+//---- about template blocks
 .about {max-width: 760px; margin: 0 auto;}
 
 // ---- app template blocks
@@ -88,11 +89,29 @@ $font-size-sm: 10px;
 .app__nav-links__item a:hover {color: #cfcfcf; text-decoration: underline}
 .app__nav-links__item a:active {color: #8ED4FA; text-decoration: none}
 
+.app__disclaimer {
+  font: 10px monospace;
+  margin: 50px 0;
+  max-width: 720px;
+  float: right;
+  text-align: right;
+}
 // ---- ridership-sparklines
+
+.ridership-sparkline-container {
+  font: 9px sans-serif;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+.ridership-sparkline__latest-value {
+  font: 11px sans-serif;
+  fill: #444;
+}
 
 .ridership-sparkline {
   fill: none;
-  stroke: black;
+  stroke: gray;
   stroke-width: 1.5px;
 }
 
@@ -101,10 +120,27 @@ $font-size-sm: 10px;
   stroke: none;
 }
 
+.ridership-sparkline__route-name {
+  font: 11px Verdana, sans-serif;
+  margin-left: 15px;
+  text-align: left;
+}
+
+.ridership-sparkline__more {
+  margin-left: 4px;
+}
+
+.ridership-sparkline__route-name a:link {color: #FF4C6D; text-decoration: underline}
+.ridership-sparkline__route-name a:visited {color: #FF4C6D; text-decoration: underline}
+.ridership-sparkline__route-name a:focus {color: #cfcfcf; text-decoration: underline}
+.ridership-sparkline__route-name a:hover {color: #cfcfcf; text-decoration: underline}
+.ridership-sparkline__route-name a:active {color: #8ED4FA; text-decoration: none}
+
+
 .ridership-sparkline__y-axis path,
 .ridership-sparkline__y-axis line {
   fill: none;
-  stroke: silver;
+  stroke: #555;
   shape-rendering: crispEdges;
 }
 
@@ -172,6 +208,12 @@ $font-size-sm: 10px;
 .service-selector__option a:focus {color: #FFB2BE; text-decoration: underline}
 .service-selector__option a:hover {color: #efefef; text-decoration: underline}
 .service-selector__option a:active {color: #FFB2BE; text-decoration: none}
+
+// ---- system
+
+.system__ridership-sparklines {
+  text-align: center;
+}
 
 // 4. MEDIA QUERIES
 
