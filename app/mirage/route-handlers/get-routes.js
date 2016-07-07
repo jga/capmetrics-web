@@ -33,7 +33,7 @@ var assemblePrimaryData = function(models, db){
 var buildIncluded = function(primaryData, db) {
   let included = [];
   let dailyRidershipsData = [];
-  let riderships = primaryData['relationships']['daily-riderships'];
+  let riderships = primaryData['relationships']['daily-riderships']['data'];
   for (let i = 0; i < riderships.length; i++) {
     let id = riderships[i].id;
     dailyRidershipsData.push({'type': 'daily-riderships', 'id': id});
@@ -42,7 +42,7 @@ var buildIncluded = function(primaryData, db) {
     included.push(resourceObject);
   }
   let serviceHourRidershipsData = [];
-  let hourlies = primaryData['relationships']['service-hour-riderships'];
+  let hourlies = primaryData['relationships']['service-hour-riderships']['data'];
   for (let j = 0; j < hourlies.length; j++) {
     let id = hourlies[j].id;
     serviceHourRidershipsData.push({'type': 'service-hour-riderships', 'id': id});
@@ -57,7 +57,7 @@ export default function(db, request) {
   var routes;
   if (request.queryParams.hasOwnProperty('filter[route-number]')) {
     routes = db.routes.where({'route-number': request.queryParams['filter[route-number]']});
-    if (routes.length > 0){
+    if (routes.length > 0) {
       let primaryData = serializeRoute(routes[0]);
       let included = buildIncluded(primaryData, db);
       return {'data': primaryData, 'included': included}
