@@ -75,7 +75,6 @@ let loadChart = function(selector, data) {
                 .duration(300);
   chart.xAxis.tickFormat(function(d) {return d3.time.format('%x')(new Date(d)) });
   chart.yAxis.tickFormat(d3.format(','));
-  window.console.log(selector);
   nv.addGraph(createGraphLoader(('#' + selector), data, chart));
   return chart;
 }
