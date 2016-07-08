@@ -3,7 +3,7 @@ import Ember from 'ember';
 let getCompendiums = function() {
   let ajaxSettings = {
     url: 'daily-riderships',
-    queryData: {sparkline: true}
+    data: {sparkline: true}
   }
   return Ember.$.ajax(ajaxSettings).done(function(data) {
     return data;
