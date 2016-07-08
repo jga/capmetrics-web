@@ -93,8 +93,8 @@ $font-size-sm: 10px;
   font: 10px monospace;
   margin: 50px 0;
   max-width: 720px;
-  float: right;
-  text-align: right;
+  float: left;
+  text-align: left;
 }
 // ---- ridership-sparklines
 
@@ -142,6 +142,11 @@ $font-size-sm: 10px;
   fill: none;
   stroke: #555;
   shape-rendering: crispEdges;
+}
+
+.ridership-sparkline__units {
+  font: 11px sans-serif;
+  fill: #333;
 }
 
 // ---- route-performance
