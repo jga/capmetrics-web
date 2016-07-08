@@ -16,7 +16,7 @@ let loadSparkline = function(selector, sparkDataset) {
   var sparkWidth = containerWidth - sparkMargins.left - sparkMargins.right;
 
   //var sparkDateFormatter = d3.time.format("%d-%b-%y");
-  var sparkDateFormatter = d3.time.format.iso();
+  var sparkDateFormatter = d3.time.format.iso;
 
   var sparkX = d3.time.scale()
                  .domain(d3.extent(sparkDataset, function(d) { return sparkDateFormatter.parse(d.date); }))
@@ -28,6 +28,10 @@ let loadSparkline = function(selector, sparkDataset) {
                  .domain([0, yExtent[1]])
                  .range([sparkHeight, 0]);
 
+  var impactScale = d3.scale.linear()
+                      .domain([0, 55000])
+                      .range([1, 10])
+
   var sparkYAxis = d3.svg.axis()
       .scale(sparkY)
       .orient("left")
@@ -36,7 +40,7 @@ let loadSparkline = function(selector, sparkDataset) {
         if (d > 1000) {
           return (d/1000).toFixed(2) + 'k';
         } else {
-          return d;
+          return Math.round(d);
         }
       })
 
@@ -45,18 +49,11 @@ let loadSparkline = function(selector, sparkDataset) {
       .y(function(d) { return sparkY(d.ridership); });
 
   var impactFormatter = d3.format(",");
-  var rawLatestValue = sparkDataset[sparkDataset.length - 1].ridership;
+  var rawLatestValue = Math.round(sparkDataset[sparkDataset.length - 1].ridership);
   var latestValue = impactFormatter(rawLatestValue);
   var impact = function() {
-    let ridershipValue = sparkDataset[sparkDataset.length - 1].ridership * 0.10;
-    let squareRoot = Math.sqrt(ridershipValue);
-    if (squareRoot < 1) {
-      return 2;
-    } else if (squareRoot > 10) {
-      return 10;
-    } else {
-      return Math.round(squareRoot);
-    }
+    let ridershipValue = sparkDataset[sparkDataset.length - 1].ridership;
+    return impactScale(ridershipValue);
   }
   var latestValueX = sparkX(sparkDateFormatter.parse(sparkDataset[sparkDataset.length - 1].date)) + impact() + 2;
 
@@ -89,8 +86,10 @@ let loadSparkline = function(selector, sparkDataset) {
         .attr("class", "ridership-sparkline__y-axis")
         .call(sparkYAxis)
       .append("text")
+        .attr('class', 'ridership-sparkline__units')
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
+        .attr("y", 4)
+        .attr("x", -50)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("rides");
