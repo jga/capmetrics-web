@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import fillEmptyPoints from 'capmetrics-web/utils/fill-empty-points';
 
 let convertTimeStamps = function(d){
   let result = Date.parse(d[0]);
@@ -93,23 +94,36 @@ let colorizeTrends = function(prettyData) {
   return prettyData;
 }
 
+// A monday timestamp helps align the x coordinate in the visualization
+// across the days of the week
+let toMondayTimestamp = function(timestamp, dayOfWeek) {
+  var candidateDate = new Date(timestamp);
+  if (dayOfWeek === 'saturday') {
+    candidateDate.setDate(candidateDate.getDate() - 5);
+  } else if (dayOfWeek === 'sunday') {
+    candidateDate.setDate(candidateDate.getDate() - 6);
+  }
+  return candidateDate.toISOString();
+}
+
 // Organizes data into days of week, sorts the days of week
 // in expected order, and colorizes (adds a color property and value)
 // to each ridership trend object
 let prettifyRiderships = function(riderships) {
   let prettyData = Ember.A();
   riderships.forEach(function(ridership){
+    let dayOfWeek = ridership.dayOfWeek;
+    let mondayTimestamp = toMondayTimestamp(ridership.measurementTimestamp, dayOfWeek);
+    let roundedRidership = Math.round(ridership.ridership);
+    let adjustedCount = dayOfWeek === 'weekday' ? roundedRidership * 5 : roundedRidership;
     let ridershipTrend = prettyData.findBy('key', ridership.dayOfWeek);
     if (ridershipTrend) {
-      ridershipTrend['values'].pushObject([ridership.measurementTimestamp, ridership.ridership])
+      ridershipTrend['values'].pushObject([mondayTimestamp, adjustedCount])
     } else {
       let starterValues = Ember.A()
-      starterValues.pushObject([
-        ridership.measurementTimestamp,
-        ridership.ridership
-      ]);
+      starterValues.pushObject([mondayTimestamp, adjustedCount]);
       let ridershipTrend = {
-        'key': ridership.dayOfWeek,
+        'key': dayOfWeek,
         'values': starterValues
       }
       prettyData.pushObject(ridershipTrend);
@@ -123,7 +137,8 @@ let prettifyRiderships = function(riderships) {
     return 0;
   });
   prettyData = colorizeTrends(prettyData);
-  return prettyData;
+  let filled = fillEmptyPoints(prettyData);
+  return filled;
 }
 
 let loadCharts = function(routeCompendiums, charts) {
