@@ -1,4 +1,5 @@
 import serializeDailyRidership from 'capmetrics-web/mirage/serializers/daily-ridership';
+import SparklineData from '../fixtures/sparkline-riderships';
 
 let assembleAllModels = function(models){
   let responseCollection = [];
@@ -20,8 +21,9 @@ export default function getDailyRiderships(db, request) {
   if (request.queryParams.hasOwnProperty('high-ridership')) {
     let models = db['daily-riderships'];
     return assembleHighRidership(models);
-  }
-  else {
+  } else if (request.queryParams.hasOwnProperty('sparkline')) {
+    return SparklineData;
+  } else {
     let models = db['daily-riderships'];
     return assembleAllModels(models);
   }
