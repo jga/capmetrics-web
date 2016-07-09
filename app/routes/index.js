@@ -4,9 +4,13 @@
  * @module routes/index
  */
 import Ember from 'ember';
+import ENV from 'capmetrics-web/config/environment';
 
 let topRouteHandler = function() {
-  return Ember.$.ajax('high-ridership').done(function(data) {
+  let ajaxSettings = {
+    url: ENV.APP.API_HOST + '/high-ridership',
+  }
+  return Ember.$.ajax(ajaxSettings).done(function(data) {
     return data;
   })
 }
