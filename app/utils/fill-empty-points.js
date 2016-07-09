@@ -5,7 +5,7 @@
  */
 
 let createTimestampInventory = function(datum) {
-  let inventory = new Set();
+  var inventory = new Set();
   for (let i = 0; i < datum.get('length'); i++) {
     let data = datum[i];
     for (let j = 0; j < data.values.length; j++) {
