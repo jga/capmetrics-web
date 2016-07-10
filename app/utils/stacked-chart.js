@@ -71,7 +71,7 @@ let createGraphLoader = function(selector, data, chart) {
   });
   chart = configureChart(chart);
   let svgContainerHeight = getContainerHeight();
-  return function loader(){
+  return function loader() {
     try {
       d3.select(selector).append('svg')
         .datum(data)
