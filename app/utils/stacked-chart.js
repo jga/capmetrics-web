@@ -14,7 +14,7 @@ let convertTimeStamps = function(d){
   return result;
 }
 
-let configureChart = function(chart) {
+let configureChart = function(chart, originalDispatch) {
   // set mobile-first defaults
   let chartHeight = 250;
   let marginTop = 10;
@@ -34,6 +34,17 @@ let configureChart = function(chart) {
     showLegend = true;
     showGuideline = true;
     showTooltip = true;
+    console.log('RICH DISPATCH')
+    chart.dispatch = originalDispatch;
+  } else {
+    console.log('QUIET DISPATCH')
+    chart.on('areaMouseover', null);
+    chart.on('areaMouseout', null);
+    chart.on('elementMouseover', null);
+    chart.on('elementMouseout', null);
+    chart.on('areaClick', null);
+    chart.on('elementClick', null);
+    chart.on('elementMouseover.tooltip', null);
   }
   // set initial render chart design
   chart.margin({
@@ -44,7 +55,6 @@ let configureChart = function(chart) {
   });
   chart.height(chartHeight);
   chart.showControls(showControls);
-  chart.showLegend(showLegend);
   chart.showLegend(showLegend);
   chart.useInteractiveGuideline(showGuideline);
   //chart.tooltip.options({'enabled': showTooltip});
@@ -63,13 +73,14 @@ let getContainerHeight = function() {
 }
 
 let createGraphLoader = function(selector, data, chart) {
+  let originalDispatch = chart.dispatch;
   // sort keys in ascending alphabetical order
   data.sort(function(a, b) {
     if (a.key > b.key) { return 1 }
     if (a.key < b.key) { return -1 }
     return 0;
   });
-  chart = configureChart(chart);
+  chart = configureChart(chart, originalDispatch);
   let svgContainerHeight = getContainerHeight();
   return function loader() {
     try {
@@ -79,7 +90,7 @@ let createGraphLoader = function(selector, data, chart) {
         .call(chart)
         .style({'height': svgContainerHeight + 'px'});
       let manager = nv.utils.windowResize(function() {
-        chart = configureChart(chart);
+        chart = configureChart(chart, originalDispatch);
         chart.update();
         let newHeight = getContainerHeight();
         d3.select(selector + ' .nvd3-svg')
@@ -108,13 +119,14 @@ let createGraphLoader = function(selector, data, chart) {
  */
 export default function(title, selector, data) {
   let chart = nv.models
-            .stackedAreaChart()
-            .x(convertTimeStamps)
-            .y(function(d) {return parseInt(d[1]) })
-            .controlLabels({stacked: "Stacked"})
-            .duration(300);
+                .stackedAreaChart()
+                .useInteractiveGuideline(true)
+                .x(convertTimeStamps)
+                .y(function(d) { return parseInt(d[1]) })
+                .controlLabels({ stacked: "Stacked" })
+                .duration(300);
   chart.legend.vers('furious');
-  chart.xAxis.tickFormat(function(d) {return d3.time.format('%x')(new Date(d)) });
+  chart.xAxis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
   chart.yAxis.tickFormat(d3.format(','));
   nv.addGraph(createGraphLoader(('#' + selector), data, chart));
   return chart;

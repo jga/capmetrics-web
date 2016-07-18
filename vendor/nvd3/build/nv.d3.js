@@ -13595,20 +13595,148 @@ nv.models.stackedAreaChart = function() {
             // Event Handling/Dispatching (in chart's scope)
             //------------------------------------------------------------
 
-            stacked.dispatch.on('areaClick.toggle', function(e) {
-                if (data.filter(function(d) { return !d.disabled }).length === 1)
-                    data.forEach(function(d) {
-                        d.disabled = false;
-                    });
-                else
-                    data.forEach(function(d,i) {
-                        d.disabled = (i != e.seriesIndex);
-                    });
+            var screenAvailableWidth = nv.utils.windowSize()['width'];
+            var richScreen = screenAvailableWidth > 400 ? true : false;
+            if (richScreen) {
+              console.log('RICH SCREEN ' + screenAvailableWidth);
+              stacked.dispatch.on('areaClick.toggle', function(e) {
+                  if (data.filter(function(d) { return !d.disabled }).length === 1)
+                      data.forEach(function(d) {
+                          d.disabled = false;
+                      });
+                  else
+                      data.forEach(function(d,i) {
+                          d.disabled = (i != e.seriesIndex);
+                      });
 
-                state.disabled = data.map(function(d) { return !!d.disabled });
-                dispatch.stateChange(state);
+                  state.disabled = data.map(function(d) { return !!d.disabled });
+                  dispatch.stateChange(state);
 
-                chart.update();
+                  chart.update();
+              });
+
+              controls.dispatch.on('legendClick', function(d,i) {
+                  if (!d.disabled) return;
+
+                  controlsData = controlsData.map(function(s) {
+                      s.disabled = true;
+                      return s;
+                  });
+                  d.disabled = false;
+
+                  stacked.style(d.style);
+
+
+                  state.style = stacked.style();
+                  dispatch.stateChange(state);
+
+                  chart.update();
+              });
+
+              interactiveLayer.dispatch.on('elementMousemove', function(e) {
+                  stacked.clearHighlights();
+                  var singlePoint, pointIndex, pointXLocation, allData = [], valueSum = 0;
+                  data
+                      .filter(function(series, i) {
+                          series.seriesIndex = i;
+                          return !series.disabled;
+                      })
+                      .forEach(function(series,i) {
+                          pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                          var point = series.values[pointIndex];
+                          var pointYValue = chart.y()(point, pointIndex);
+                          if (pointYValue != null) {
+                              stacked.highlightPoint(i, pointIndex, true);
+                          }
+                          if (typeof point === 'undefined') return;
+                          if (typeof singlePoint === 'undefined') singlePoint = point;
+                          if (typeof pointXLocation === 'undefined') pointXLocation = chart.xScale()(chart.x()(point,pointIndex));
+
+                          //If we are in 'expand' mode, use the stacked percent value instead of raw value.
+                          var tooltipValue = (stacked.style() == 'expand') ? point.display.y : chart.y()(point,pointIndex);
+                          allData.push({
+                              key: series.key,
+                              value: tooltipValue,
+                              color: color(series,series.seriesIndex),
+                              point: point
+                          });
+
+                          if (showTotalInTooltip && stacked.style() != 'expand') {
+                            valueSum += tooltipValue;
+                          };
+                      });
+
+                  allData.reverse();
+
+                  //Highlight the tooltip entry based on which stack the mouse is closest to.
+                  if (allData.length > 2) {
+                      var yValue = chart.yScale().invert(e.mouseY);
+                      var yDistMax = Infinity, indexToHighlight = null;
+                      allData.forEach(function(series,i) {
+
+                          //To handle situation where the stacked area chart is negative, we need to use absolute values
+                          //when checking if the mouse Y value is within the stack area.
+                          yValue = Math.abs(yValue);
+                          var stackedY0 = Math.abs(series.point.display.y0);
+                          var stackedY = Math.abs(series.point.display.y);
+                          if ( yValue >= stackedY0 && yValue <= (stackedY + stackedY0))
+                          {
+                              indexToHighlight = i;
+                              return;
+                          }
+                      });
+                      if (indexToHighlight != null)
+                          allData[indexToHighlight].highlight = true;
+                  }
+
+                  //If we are not in 'expand' mode, add a 'Total' row to the tooltip.
+                  if (showTotalInTooltip && stacked.style() != 'expand' && allData.length >= 2) {
+                      allData.push({
+                          key: totalLabel,
+                          value: valueSum,
+                          total: true
+                      });
+                  }
+
+                  var xValue = chart.x()(singlePoint,pointIndex);
+
+                  var valueFormatter = interactiveLayer.tooltip.valueFormatter();
+                  // Keeps track of the tooltip valueFormatter if the chart changes to expanded view
+                  if (stacked.style() === 'expand' || stacked.style() === 'stack_percent') {
+                      if ( !oldValueFormatter ) {
+                          oldValueFormatter = valueFormatter;
+                      }
+                      //Forces the tooltip to use percentage in 'expand' mode.
+                      valueFormatter = d3.format(".1%");
+                  }
+                  else {
+                      if (oldValueFormatter) {
+                          valueFormatter = oldValueFormatter;
+                          oldValueFormatter = null;
+                      }
+                  }
+
+                  interactiveLayer.tooltip
+                      .chartContainer(that.parentNode)
+                      .valueFormatter(valueFormatter)
+                      .data(
+                      {
+                          value: xValue,
+                          series: allData
+                      }
+                  )();
+
+                  interactiveLayer.renderGuideLine(pointXLocation);
+
+              });
+
+
+            } else {
+              console.log('SMALL SCREEN ' + screenAvailableWidth)
+            }//end rich screen flag logic
+
+            interactiveLayer.dispatch.on("elementMouseout",function(e) {
+                stacked.clearHighlights();
             });
 
             legend.dispatch.on('stateChange', function(newState) {
@@ -13616,125 +13744,6 @@ nv.models.stackedAreaChart = function() {
                     state[key] = newState[key];
                 dispatch.stateChange(state);
                 chart.update();
-            });
-
-            controls.dispatch.on('legendClick', function(d,i) {
-                if (!d.disabled) return;
-
-                controlsData = controlsData.map(function(s) {
-                    s.disabled = true;
-                    return s;
-                });
-                d.disabled = false;
-
-                stacked.style(d.style);
-
-
-                state.style = stacked.style();
-                dispatch.stateChange(state);
-
-                chart.update();
-            });
-
-            interactiveLayer.dispatch.on('elementMousemove', function(e) {
-                stacked.clearHighlights();
-                var singlePoint, pointIndex, pointXLocation, allData = [], valueSum = 0;
-                data
-                    .filter(function(series, i) {
-                        series.seriesIndex = i;
-                        return !series.disabled;
-                    })
-                    .forEach(function(series,i) {
-                        pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
-                        var point = series.values[pointIndex];
-                        var pointYValue = chart.y()(point, pointIndex);
-                        if (pointYValue != null) {
-                            stacked.highlightPoint(i, pointIndex, true);
-                        }
-                        if (typeof point === 'undefined') return;
-                        if (typeof singlePoint === 'undefined') singlePoint = point;
-                        if (typeof pointXLocation === 'undefined') pointXLocation = chart.xScale()(chart.x()(point,pointIndex));
-
-                        //If we are in 'expand' mode, use the stacked percent value instead of raw value.
-                        var tooltipValue = (stacked.style() == 'expand') ? point.display.y : chart.y()(point,pointIndex);
-                        allData.push({
-                            key: series.key,
-                            value: tooltipValue,
-                            color: color(series,series.seriesIndex),
-                            point: point
-                        });
-
-                        if (showTotalInTooltip && stacked.style() != 'expand') {
-                          valueSum += tooltipValue;
-                        };
-                    });
-
-                allData.reverse();
-
-                //Highlight the tooltip entry based on which stack the mouse is closest to.
-                if (allData.length > 2) {
-                    var yValue = chart.yScale().invert(e.mouseY);
-                    var yDistMax = Infinity, indexToHighlight = null;
-                    allData.forEach(function(series,i) {
-
-                        //To handle situation where the stacked area chart is negative, we need to use absolute values
-                        //when checking if the mouse Y value is within the stack area.
-                        yValue = Math.abs(yValue);
-                        var stackedY0 = Math.abs(series.point.display.y0);
-                        var stackedY = Math.abs(series.point.display.y);
-                        if ( yValue >= stackedY0 && yValue <= (stackedY + stackedY0))
-                        {
-                            indexToHighlight = i;
-                            return;
-                        }
-                    });
-                    if (indexToHighlight != null)
-                        allData[indexToHighlight].highlight = true;
-                }
-
-                //If we are not in 'expand' mode, add a 'Total' row to the tooltip.
-                if (showTotalInTooltip && stacked.style() != 'expand' && allData.length >= 2) {
-                    allData.push({
-                        key: totalLabel,
-                        value: valueSum,
-                        total: true
-                    });
-                }
-
-                var xValue = chart.x()(singlePoint,pointIndex);
-
-                var valueFormatter = interactiveLayer.tooltip.valueFormatter();
-                // Keeps track of the tooltip valueFormatter if the chart changes to expanded view
-                if (stacked.style() === 'expand' || stacked.style() === 'stack_percent') {
-                    if ( !oldValueFormatter ) {
-                        oldValueFormatter = valueFormatter;
-                    }
-                    //Forces the tooltip to use percentage in 'expand' mode.
-                    valueFormatter = d3.format(".1%");
-                }
-                else {
-                    if (oldValueFormatter) {
-                        valueFormatter = oldValueFormatter;
-                        oldValueFormatter = null;
-                    }
-                }
-
-                interactiveLayer.tooltip
-                    .chartContainer(that.parentNode)
-                    .valueFormatter(valueFormatter)
-                    .data(
-                    {
-                        value: xValue,
-                        series: allData
-                    }
-                )();
-
-                interactiveLayer.renderGuideLine(pointXLocation);
-
-            });
-
-            interactiveLayer.dispatch.on("elementMouseout",function(e) {
-                stacked.clearHighlights();
             });
 
             // Update chart from a state object passed to event handler
@@ -13766,11 +13775,21 @@ nv.models.stackedAreaChart = function() {
     // Event Handling/Dispatching (out of chart's scope)
     //------------------------------------------------------------
 
-    stacked.dispatch.on('elementMouseover.tooltip', function(evt) {
-        evt.point['x'] = stacked.x()(evt.point);
-        evt.point['y'] = stacked.y()(evt.point);
-        tooltip.data(evt).hidden(false);
-    });
+    var availableScreenWidth = nv.utils.windowSize()['width'];
+    var richScreen = availableScreenWidth > 400 ? true : false;
+    if (richScreen) {
+      console.log('TOOLTIP MOUSEOVER ACTIVE')
+      stacked.dispatch.on('elementMouseover.tooltip', function(evt) {
+          evt.point['x'] = stacked.x()(evt.point);
+          evt.point['y'] = stacked.y()(evt.point);
+          tooltip.data(evt).hidden(false);
+      });
+    } else {
+      console.log('TOOLTIME MOUSEOVER INACTIVE')
+      stacked.dispatch.on('elementMouseover.tooltip', function(evt) {
+        tooltip.hidden(true);
+      });
+    }
 
     stacked.dispatch.on('elementMouseout.tooltip', function(evt) {
         tooltip.hidden(true)
