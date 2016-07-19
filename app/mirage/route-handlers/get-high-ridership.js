@@ -1,5 +1,5 @@
 import HighRidershipData from '../fixtures/high-ridership';
 
-export default function(db, request) {
+export default function() {
   return HighRidershipData;
 }

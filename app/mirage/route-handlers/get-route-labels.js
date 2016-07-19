@@ -1,6 +1,6 @@
 import serializeRouteLabel from 'capmetrics-web/mirage/serializers/route-label';
 
-var assemblePrimaryData = function(models, db){
+var assemblePrimaryData = function(models){
   let responseCollection = [];
   for (let i = 0; i < models.length; i++) {
     let model = models[i];
@@ -12,7 +12,7 @@ var assemblePrimaryData = function(models, db){
   };
 }
 
-export default function(db, request) {
+export default function(db) {
   var routes = db['routes'];
-  return assemblePrimaryData(routes, db);
+  return assemblePrimaryData(routes);
 }

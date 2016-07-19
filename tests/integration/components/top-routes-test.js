@@ -7,5 +7,5 @@ moduleForComponent('top-routes', 'Integration | Component | top routes', {
 
 test('it renders', function(assert) {
   this.render(hbs`{{top-routes}}`);
-  assert.equal(this.$().text().trim(), 'Top 10 Rides by Day of Week');
+  assert.equal(this.$().text().trim(), 'Top 10 Weekly Rides');
 });

@@ -28,11 +28,7 @@ let assembleAllModels = function(models){
   };
 }
 
-let assembleHighRidership = function(models){
-  return assembleAllModels(models);
-}
-
-export default function (db, request) {
+export default function (db) {
   let models = db['service-hour-riderships'];
   return assembleAllModels(models);
 }

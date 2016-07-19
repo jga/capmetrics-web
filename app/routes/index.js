@@ -20,8 +20,8 @@ let topRouteHandler = function() {
         //get 'weekday' with last timestamp
         let ridershipA = _.find(a.riderships, function(ridership) {
           return (ridership.calendarYear === mostRecentYear
-                  && ridership.season === mostRecentSeason
-                  && ridership.dayOfWeek === 'weekday')
+                   && ridership.season === mostRecentSeason
+                   && ridership.dayOfWeek === 'weekday')
         })
         let ridershipB = _.find(b.riderships, function(ridership) {
           return (ridership.calendarYear === mostRecentYear

@@ -2,15 +2,15 @@ import Ember from 'ember';
 import productivityColors from 'capmetrics-web/utils/productivity-colors';
 
 var getDimensions = function(windowWidth) {
-  let availableWidth = Math.round(windowWidth * .8);
-  let breakpoint = 720;
+  let availableWidth = Math.round(windowWidth * 0.8);
+  let breakpoint = 500;
   let dimensions = {};
   dimensions.squareGap = 1;
   dimensions.marginTop = 10;
   dimensions.marginBottom = 10;
   dimensions.marginRight = 10;
   dimensions.marginLeft = 10;
-  dimensions.width = availableWidth > 500 ? 500 : availableWidth;
+  dimensions.width = availableWidth > breakpoint ? breakpoint : availableWidth;
   dimensions.visWidth = dimensions.width - dimensions.marginLeft - dimensions.marginRight;
   // 19 columns give us a max of 95 route data points
   dimensions.squareEdge = Math.floor((dimensions.visWidth - (19 * dimensions.squareGap)) / 19);
@@ -115,18 +115,29 @@ export default Ember.Component.extend({
   },
 
   periodPerformance: null,
-  prettyDate: Ember.computed('periodPerformance', function(){
-    let monthNames = ["January", "February", "March", "April", "May", "June",
-                      "July", "August", "September", "October", "November", "December"];
-    let periodDate = new Date(this.get('periodPerformance')['date']);
-    return monthNames[periodDate.getMonth()] + ' ' + periodDate.getFullYear().toString();
+
+  prettyDate: Ember.computed('periodPerformance', function() {
+    if (this.get('periodPerformance')) {
+      let monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+      let periodDate = new Date(this.get('periodPerformance')['date']);
+      return monthNames[periodDate.getMonth()] + ' ' + periodDate.getFullYear().toString();
+    } else {
+      return '';
+    }
   }),
+
   showDetail: false,
+
   squareVisualization: null,
 
-  squareVisualizationIdentifier: Ember.computed('periodPerformance', function(){
-    let periodDate = new Date(this.get('periodPerformance')['date']);
-    return 'square-vis-' + periodDate.getMonth().toString() + '-' + periodDate.getYear().toString();
+  squareVisualizationIdentifier: Ember.computed('periodPerformance', function() {
+    if (this.get('periodPerformance')) {
+      let periodDate = new Date(this.get('periodPerformance')['date']);
+      return 'square-vis-' + periodDate.getMonth().toString() + '-' + periodDate.getYear().toString();
+    } else {
+      return 'square-vis-no-data';
+    }
   }),
 
   willDestroyElement() {

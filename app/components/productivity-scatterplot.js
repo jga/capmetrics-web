@@ -1,16 +1,16 @@
 import Ember from 'ember';
 
 var updateDimensions = function(windowWidth) {
-  let availableWidth = Math.round(windowWidth * .8);
+  let availableWidth = Math.round(windowWidth * 0.8);
   let breakpoint = 720;
   let dimensions = {};
   dimensions.marginTop = availableWidth < breakpoint ? 10 : 35;
   dimensions.marginBottom = availableWidth < breakpoint ? 30 : 35;
   dimensions.marginRight = availableWidth < breakpoint ? 10 : 35;
   dimensions.marginLeft = availableWidth < breakpoint ? 30 : 35;
-  let fullWidth = availableWidth - dimensions.marginLeft - dimensions.marginRight
+  let fullWidth = availableWidth - dimensions.marginLeft - dimensions.marginRight;
   dimensions.width = fullWidth > 900 ? 900 : fullWidth;
-  dimensions.height = availableWidth < breakpoint ? Math.round(0.9 * dimensions.width) : Math.round(.5 * dimensions.width);
+  dimensions.height = availableWidth < breakpoint ? Math.round(0.9 * dimensions.width) : Math.round(0.5 * dimensions.width);
   dimensions.visHeight = dimensions.height - dimensions.marginTop - dimensions.marginBottom;
   dimensions.visWidth = dimensions.width - dimensions.marginLeft - dimensions.marginRight;
   return dimensions;
@@ -20,7 +20,7 @@ var loadScatterVisualization = function(dataSeries, visLabel) {
 
     // extents
     var yExtent = d3.extent(dataSeries, function(d) { return d.productivity ? d.productivity : 0; })
-    var xExtent = d3.extent(dataSeries, function(d) { return d.ridership ? d.ridership : 0; ; })
+    var xExtent = d3.extent(dataSeries, function(d) { return d.ridership ? d.ridership : 0; })
 
     // scales
     var xScale = d3.scale.linear()
@@ -91,15 +91,13 @@ var loadScatterVisualization = function(dataSeries, visLabel) {
       ridershipColor = ridershipColor < 0 ? 0 : ridershipColor;
       var hslColor = d3.hsl('rgb(' + ridershipColor + ',0,' + productivityColor + ')');
       var finalColor = d3.hsl(hslColor.h, 0.9, 0.97);
-      return finalColor;
+      return finalColor
     }
 
     //render function
     var render = function() {
       // dimensions
       var dimensions = updateDimensions(window.innerWidth);
-      var containerHeight = dimensions.height;
-      var containerWidth = dimensions.width;
       // scales
       xScale.range([0, dimensions.visWidth])
       yScale.range([dimensions.visHeight, 0])
@@ -161,7 +159,7 @@ var loadScatterVisualization = function(dataSeries, visLabel) {
             })
            .attr('y', function(d) { return yScale(d.productivity) + 4 })
             .attr("y", function(d) {
-              let value = d.productivity ? d.productivity : 0;;
+              let value = d.productivity ? d.productivity : 0;
               return yScale(value) + 4;
             })
            .text(function(d) {return d.routeNumber})
@@ -210,17 +208,27 @@ export default Ember.Component.extend({
   }),
 
   prettyDate: Ember.computed('periodPerformance', function(){
-    var monthNames = ["January", "February", "March", "April", "May", "June",
-                      "July", "August", "September", "October", "November", "December"];
-    let periodDate = new Date(this.get('periodPerformance')['date']);
-    return monthNames[periodDate.getMonth()] + ' ' + periodDate.getFullYear().toString();
+    if (this.get('periodPerformance')) {
+      var monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+      let periodDate = new Date(this.get('periodPerformance')['date']);
+      return monthNames[periodDate.getMonth()] + ' ' + periodDate.getFullYear().toString();
+    } else {
+      return '';
+    }
   }),
+
   showDetail: false,
+
   scatterVisualization: null,
 
   scatterVisualizationIdentifier: Ember.computed('periodPerformance', function(){
-    let periodDate = new Date(this.get('periodPerformance')['date']);
-    return 'scatter-vis-' + periodDate.getMonth().toString() + '-' + periodDate.getYear().toString();
+    if (this.get('periodPerformance')) {
+      let periodDate = new Date(this.get('periodPerformance')['date']);
+      return 'scatter-vis-' + periodDate.getMonth().toString() + '-' + periodDate.getYear().toString();
+    } else {
+      return 'scatter-vis-no-data';
+    }
   }),
 
   willDestroyElement() {

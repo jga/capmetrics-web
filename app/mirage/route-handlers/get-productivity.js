@@ -1,6 +1,6 @@
 import ProductivityData from '../fixtures/productivity';
 
-export default function(db, request) {
+export default function() {
   return ProductivityData;
 }
 
