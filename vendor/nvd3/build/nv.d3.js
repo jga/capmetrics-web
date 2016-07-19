@@ -222,7 +222,19 @@ nv.interactiveGuideline = function() {
                 return;
             }
 
+
             function mouseHandler() {
+
+                // add interactive boolean status based on available width
+                var isInteractive = function(width) {
+                  if (width < nv.breakpoint) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                }
+                var showTooltip =  isInteractive(nv.utils.windowSize()['width']);
+
                 var d3mouse = d3.mouse(this);
                 var mouseX = d3mouse[0];
                 var mouseY = d3mouse[1];
@@ -290,7 +302,12 @@ nv.interactiveGuideline = function() {
                     tooltip.hidden(true);
                     return;
                 } else {
-                    tooltip.hidden(false);
+                    // Mutes tooltip if window size below breakpoint
+                    if (showTooltip) {
+                      tooltip.hidden(false);
+                    } else {
+                      tooltip.hidden(true);
+                    }
                 }
 
 
