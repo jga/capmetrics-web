@@ -19,6 +19,8 @@ if (typeof(module) !== 'undefined' && typeof(exports) !== 'undefined' && typeof(
 }
 
 nv.dispatch = d3.dispatch('render_start', 'render_end');
+// Create a global breakpoint for responsive interactive features
+nv.breakpoint = 768;
 
 // Function bind polyfill
 // Needed ONLY for phantomJS as it's missing until version 2.0 which is unreleased as of this comment
