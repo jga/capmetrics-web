@@ -13415,7 +13415,19 @@ nv.models.stackedAreaChart = function() {
             var availableWidth = nv.utils.availableWidth(width, container, margin),
                 availableHeight = nv.utils.availableHeight(height, container, margin);
 
-            chart.update = function() { container.transition().duration(duration).call(chart); };
+            // add interactive boolean status based on available screen width
+            var isInteractive = function(width) {
+              if (width < nv.breakpoint) {
+                return false;
+              } else {
+                return true;
+              }
+            }
+            chart.isInteractive =  isInteractive(nv.utils.windowSize()['width']);
+            useInteractiveGuideline = chart.isInteractive;
+            chart.update = function() {
+              container.transition().duration(duration).call(chart);
+            };
             chart.container = this;
 
             state
@@ -13614,46 +13626,51 @@ nv.models.stackedAreaChart = function() {
             // Event Handling/Dispatching (in chart's scope)
             //------------------------------------------------------------
 
-            var screenAvailableWidth = nv.utils.windowSize()['width'];
-            var richScreen = screenAvailableWidth > 400 ? true : false;
-            if (richScreen) {
-              console.log('RICH SCREEN ' + screenAvailableWidth);
-              stacked.dispatch.on('areaClick.toggle', function(e) {
-                  if (data.filter(function(d) { return !d.disabled }).length === 1)
-                      data.forEach(function(d) {
-                          d.disabled = false;
-                      });
-                  else
-                      data.forEach(function(d,i) {
-                          d.disabled = (i != e.seriesIndex);
-                      });
+            stacked.dispatch.on('areaClick.toggle', function(e) {
+              // check if chart is interactive based on breakpoint
+              if (chart.isInteractive) {
+                if (data.filter(function(d) { return !d.disabled }).length === 1)
+                    data.forEach(function(d) {
+                        d.disabled = false;
+                    });
+                else
+                    data.forEach(function(d,i) {
+                        d.disabled = (i != e.seriesIndex);
+                    });
 
-                  state.disabled = data.map(function(d) { return !!d.disabled });
-                  dispatch.stateChange(state);
+                state.disabled = data.map(function(d) { return !!d.disabled });
+                dispatch.stateChange(state);
 
-                  chart.update();
-              });
+                chart.update();
+              }
+            });
 
-              controls.dispatch.on('legendClick', function(d,i) {
-                  if (!d.disabled) return;
+            controls.dispatch.on('legendClick', function(d,i) {
+              // check if chart is interactive based on breakpoint
+              if (chart.isInteractive) {
+                if (!d.disabled) return;
 
-                  controlsData = controlsData.map(function(s) {
-                      s.disabled = true;
-                      return s;
-                  });
-                  d.disabled = false;
+                controlsData = controlsData.map(function(s) {
+                    s.disabled = true;
+                    return s;
+                });
+                d.disabled = false;
 
-                  stacked.style(d.style);
+                stacked.style(d.style);
 
 
-                  state.style = stacked.style();
-                  dispatch.stateChange(state);
+                state.style = stacked.style();
+                dispatch.stateChange(state);
 
-                  chart.update();
-              });
+                chart.update();
+              }
+            });
 
-              interactiveLayer.dispatch.on('elementMousemove', function(e) {
-                  stacked.clearHighlights();
+            interactiveLayer.dispatch.on('elementMousemove', function(e) {
+                stacked.clearHighlights();
+                // check is chart is interactive based on breakpoint
+                if (chart.isInteractive) {
+                  console.log('Element mouse move requested');
                   var singlePoint, pointIndex, pointXLocation, allData = [], valueSum = 0;
                   data
                       .filter(function(series, i) {
@@ -13746,13 +13763,11 @@ nv.models.stackedAreaChart = function() {
                   )();
 
                   interactiveLayer.renderGuideLine(pointXLocation);
-
-              });
-
-
-            } else {
-              console.log('SMALL SCREEN ' + screenAvailableWidth)
-            }//end rich screen flag logic
+                } else {
+                  //not interactice - clear highlights
+                  stacked.clearHighlights();
+                }
+            });
 
             interactiveLayer.dispatch.on("elementMouseout",function(e) {
                 stacked.clearHighlights();
@@ -13794,21 +13809,17 @@ nv.models.stackedAreaChart = function() {
     // Event Handling/Dispatching (out of chart's scope)
     //------------------------------------------------------------
 
-    var availableScreenWidth = nv.utils.windowSize()['width'];
-    var richScreen = availableScreenWidth > 400 ? true : false;
-    if (richScreen) {
-      console.log('TOOLTIP MOUSEOVER ACTIVE')
-      stacked.dispatch.on('elementMouseover.tooltip', function(evt) {
+
+    stacked.dispatch.on('elementMouseover.tooltip', function(evt) {
+        // only show tooltip if the chart is above interactive breakpoint
+        if (chart.isInteractive) {
           evt.point['x'] = stacked.x()(evt.point);
           evt.point['y'] = stacked.y()(evt.point);
           tooltip.data(evt).hidden(false);
-      });
-    } else {
-      console.log('TOOLTIME MOUSEOVER INACTIVE')
-      stacked.dispatch.on('elementMouseover.tooltip', function(evt) {
-        tooltip.hidden(true);
-      });
-    }
+        } else {
+          tooltip.hidden(true)
+        }
+    });
 
     stacked.dispatch.on('elementMouseout.tooltip', function(evt) {
         tooltip.hidden(true)
