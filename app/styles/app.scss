@@ -9,6 +9,7 @@
 // ---- universal blocks
 // ---- about
 // ---- app
+// ---- day-legend
 // ---- index
 // ---- productivity-scatter
 // ---- ridership-sparklines
@@ -97,6 +98,26 @@ $font-size-sm: 10px;
   padding: 0 20px;
   text-align: left;
 }
+
+// ---- day-legend
+
+.day-legend {
+  position: relative;
+  top: -25px;
+  display: inline-block;
+  line-height: 1;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.day-legend__entry {
+  color: #fff;
+  display: inline;
+  font-size: $font-size-sm;
+  padding: 2px 4px;
+  margin: 0.5px;
+}
+
 // ---- productivity-scatter
 
 .productivity-scatter__axis {
@@ -268,6 +289,10 @@ text.productivity-squares__count-label {
   margin: 20px 0px;
 }
 
+.route-trends__day-legend {
+  text-align: center;
+}
+
 // ---- service-legend
 
 .service-legend {
@@ -281,6 +306,7 @@ text.productivity-squares__count-label {
   color: white;
   display: inline;
   font-size: $font-size-sm;
+  opacity: 0.9;
   padding: 1px 2px;
   margin: 0.5px;
 }
@@ -315,6 +341,12 @@ text.productivity-squares__count-label {
   text-align: center;
 }
 
+// ---- top-routes
+
+.top-routes__day-legend {
+  text-align: center;
+}
+
 // 4. MEDIA QUERIES
 
 /* Larger than mobile */
@@ -339,6 +371,7 @@ text.productivity-squares__count-label {
   .nv-axis text {font-size: 12px;}
   // hides static legend
   .service-legend__entry {display: none;}
+  .day-legend__entry {display: none;}
 }
 
 /* Larger than desktop */
