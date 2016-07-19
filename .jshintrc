@@ -3,6 +3,7 @@
     "server",
     "document",
     "window",
+    "_",
     "-Promise",
     "d3",
     "nv"
@@ -17,7 +18,7 @@
   "evil": true,
   "forin": false,
   "immed": false,
-  "laxbreak": false,
+  "laxbreak": true,
   "newcap": true,
   "noarg": true,
   "noempty": false,
