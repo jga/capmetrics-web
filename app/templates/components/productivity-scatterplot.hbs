@@ -1,0 +1,18 @@
+<div>
+  <div class='title'>Ridership vs Productivity <span class='title--subtle'>{{prettyDate}}</span></div>
+  <div id={{scatterVisualizationIdentifier}}></div>
+  <button class='productivity-scatter__detail-toggle' {{action 'toggleDetail'}}>Data</button>
+  {{#if showDetail}}
+    <div class='productivity-scatter__data-title'>Transit Route Data <span class='title--subtle'>{{prettyDate}}</span></div>
+    <div>
+      {{#each latestPerformance as |routePerformance|}}
+        <div class='productivity-scatter__data-row'>
+          Route {{#link-to "route-performance" routePerformance.routeNumber}}{{routePerformance.routeNumber}}{{/link-to}}
+          <span style='color: #444; margin-left:20px;'>Rides</span>: <span style='color:#222; font-family: monospace;'>{{routePerformance.ridership}}</span>
+          <span style='color: #444; margin-left: 10px;'>Rides/Hr</span>: <span style='color:#222; font-family: monospace;'>{{routePerformance.productivity}}</span>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>
+{{yield}}
