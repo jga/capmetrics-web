@@ -18,6 +18,7 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('index', {path: '/'});
+  this.route('productivity');
   this.route('route-performance', {path: '/route-performance/:route_number'});
   this.route('routes');
   this.route('system');
