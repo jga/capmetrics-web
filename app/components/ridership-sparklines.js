@@ -1,6 +1,5 @@
 import Ember from 'ember';
 
-
 let loadSparkline = function(selector, sparkDataset) {
 
   var sparkMargins = {
