@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import fillEmptyPoints from 'capmetrics-web/utils/fill-empty-points';
-import DayOfWeekColors from 'capmetrics/utils/day-of-week-colors';
+import DayOfWeekColors from 'capmetrics-web/utils/day-of-week-colors';
 
 let convertTimeStamps = function(d){
   let result = Date.parse(d[0]);
