@@ -21,6 +21,7 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   app.import('bower_components/d3/d3.js');
+  app.import('bower_components/lodash/lodash.min.js');
   // Customized version of nvd3
   app.import('vendor/nvd3/build/nv.d3.css');
   app.import('vendor/nvd3/build/nv.d3.js');
