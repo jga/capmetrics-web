@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import fillEmptyPoints from 'capmetrics-web/utils/fill-empty-points';
+import DayOfWeekColors from 'capmetrics/utils/day-of-week-colors';
 
 let convertTimeStamps = function(d){
   let result = Date.parse(d[0]);
@@ -83,11 +84,11 @@ let loadChart = function(selector, data) {
 let colorizeTrends = function(prettyData) {
   for (let i = 0; i < prettyData.length; i++) {
     let trend = prettyData[i];
-    let color = '#05487F';
+    let color = DayOfWeekColors.weekday ;
     if (trend.key === 'saturday') {
-      color = '#29B86F';
+      color = DayOfWeekColors.saturday;
     } else if (trend.key === 'sunday') {
-      color = '#BDBADF';
+      color = DayOfWeekColors.sunday;
     }
     trend.color = color;
   }
@@ -164,7 +165,8 @@ export default Ember.Component.extend({
 
   didRender() {
     if (this.get('routeCompendiums')) {
-      let charts = loadCharts(this.get('routeCompendiums'), this.get('charts'));
+      let routeCompendiums = this.get('routeCompendiums');
+      let charts = loadCharts(routeCompendiums, this.get('charts'));
       this.set('charts', charts);
     }
   },
