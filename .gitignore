@@ -4,6 +4,9 @@
 *.swp
 *.swo
 
+# IDE
+.idea
+
 # compiled output
 /dist
 /tmp
