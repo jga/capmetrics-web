@@ -10,6 +10,7 @@
 // ---- about
 // ---- app
 // ---- index
+// ---- productivity-scatter
 // ---- ridership-sparklines
 // ---- route-performance
 // ---- route-trends
@@ -47,11 +48,11 @@ $font-size-sm: 10px;
 }
 
 .title--subtle {
-  color: #d3d3d3;
+  color: #bbb;
 }
 
 //---- about template blocks
-.about {max-width: 760px; margin: 0 auto;}
+.about {font-size: 18px; max-width: 700px; margin: 0 auto;}
 
 // ---- app template blocks
 .app {min-height: 800px;padding-bottom: 50px;}
@@ -80,6 +81,7 @@ $font-size-sm: 10px;
 }
 
 .app__nav-links__item {
+  font-size: 16px;
   margin: 5px 5px;
 }
 
@@ -95,6 +97,100 @@ $font-size-sm: 10px;
   padding: 0 20px;
   text-align: left;
 }
+// ---- productivity-scatter
+
+.productivity-scatter__axis {
+ font: 9px sans-serif;
+}
+
+.productivity-scatter__axis line,
+.productivity-scatter__axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.productivity-scatter__data-row {
+  font-size: 11px;
+  margin-left: 30px;
+}
+
+.productivity-scatter__data-title {
+  font-family: Verdana, sans-serif;
+  font-size: 12px;
+  margin-left: 25px;
+  margin-bottom: 2px;
+}
+
+text.productivity-scatter__point-route {
+  font: 11px sans-serif;
+}
+
+button.productivity-scatter__detail-toggle {
+  font-size: 10px;
+  margin-left: 25px;
+  padding: 0 10px;
+}
+
+text.productivity-scatter__x-label {
+  fill: #D62B3F;
+}
+
+text.productivity-scatter__y-label {
+  fill: #1B2BDE;
+}
+
+// ---- productivity-squares
+
+.productivity-squares__data-row {
+  font-size: 11px;
+  margin-left: 30px;
+}
+
+.productivity-squares__data-title {
+  font-family: Verdana, sans-serif;
+  font-size: 12px;
+  margin-left: 25px;
+  margin-bottom: 2px;
+}
+
+.productivity-squares__date {
+  font-family: Verdana, sans-serif;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+button.productivity-squares__detail-toggle {
+  font-size: 10px;
+  margin-left: 25px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+
+.productivity-squares__legend {
+  margin: 10px 0 20px 25px;
+  font-size: 11px;
+}
+
+.productivity-squares__legend-entry {
+  font: 11px Century Gothic, Arial, sans-serif;
+  display: inline-block;
+  margin: 0 1px;
+  padding: 4px;
+  text-align: center;
+  width: 35px;
+}
+
+.productivity-squares__vis-container {
+  margin-top: 40px;
+  margin-left: 25px;
+}
+
+text.productivity-squares__count-label {
+  fill: #333;
+  font-size: 11px;
+}
+
 // ---- ridership-sparklines
 
 .ridership-sparkline-container {
@@ -228,22 +324,26 @@ $font-size-sm: 10px;
 
 /* Larger than phablet */
 @media (min-width: 550px) {
-  .app__nav-links {float: right; border-top: 0px; border-bottom: 0px; padding: 21px 10px 10px 10px;}
-  .app__nav-links__item {display: inline;}
+  .app__nav-links {float: right; border-top: 0px; border-bottom: 0px; padding: 21px 0px 10px 0px;}
+  .app__nav-links__item {font-size: 11px; display: inline; margin: 2.5px}
 }
 
 /* Larger than tablet */
 @media (min-width: 750px) {
+  .app__nav-links {float: right; border-top: 0px; border-bottom: 0px; padding: 21px 0px 10px 0px;}
+  .app__nav-links__item {font-size: 14px; display: inline; margin: 5px;}
 }
 
-/* Too large for charts to include interactive legend */
+/* Large enough for charts to include interactive legend */
 @media (min-width: 768px) {
   .nv-axis text {font-size: 12px;}
+  // hides static legend
   .service-legend__entry {display: none;}
 }
 
 /* Larger than desktop */
 @media (min-width: 1000px) {
+  .app__nav-links__item {font-size: 16px; display: inline;}
 }
 
 /* Larger than Desktop HD */
