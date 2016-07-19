@@ -1,5 +1,6 @@
 import getDailyRiderships from './get-daily-riderships';
 import getHighRidership from './get-high-ridership';
+import getProductivity from './get-productivity';
 import getRoute from './get-route';
 import getRoutes from './get-routes';
 import getRouteLabels from './get-route-labels';
@@ -8,6 +9,7 @@ import getSystemTrends from './get-system-trends';
 
 export {getDailyRiderships as getDailyRiderships};
 export {getHighRidership as getHighRidership};
+export {getProductivity as getProductivity};
 export {getRoute as getRoute};
 export {getRoutes as getRoutes};
 export {getRouteLabels as getRouteLabels};

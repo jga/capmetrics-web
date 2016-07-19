@@ -1,0 +1,14 @@
+{{productivity-scatterplot periodPerformances=model}}
+<div style='margin-top: 30px;'>
+  <div class='title'>Productivity Distributions <span class='title--subtle'>Rides per Service Hour</span></div>
+  <div class='productivity-squares__legend'>
+    <div>Legend: <span style='color:#666'>Rides per Service Hour for Route</span></div>
+    {{#each legendEntries as |entry|}}
+      <div class='productivity-squares__legend-entry' style='background-color: {{entry.color}}'>{{entry.range}}</div>
+    {{/each}}
+  </div>
+  {{#each model as |periodPerformance|}}
+    {{productivity-squares periodPerformance=periodPerformance}}
+  {{/each}}
+</div>
+{{outlet}}
