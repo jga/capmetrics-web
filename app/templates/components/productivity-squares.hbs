@@ -1,0 +1,20 @@
+<div>
+  <div class='productivity-squares__vis-container'>
+    <div class='productivity-squares__date'>{{prettyDate}}</div>
+    <div id={{squareVisualizationIdentifier}}></div>
+  </div>
+  <button class='productivity-squares__detail-toggle' {{action 'toggleDetail'}}>Data</button>
+  {{#if showDetail}}
+    <div class='productivity-squares__data-title'>Transit Route Data <span class='title--subtle'>{{prettyDate}}</span></div>
+    <div>
+    {{#each periodPerformance.performance as |routePerformance|}}
+      <div class='productivity-squares__data-row'>
+        Route {{#link-to "route-performance" routePerformance.routeNumber}}{{routePerformance.routeNumber}}{{/link-to}}
+        <span style='color: #444; margin-left:20px;'>Rides</span>: <span style='color:#222; font-family: monospace;'>{{routePerformance.ridership}}</span>
+        <span style='color: #444; margin-left: 10px;'>Rides/Hr</span>: <span style='color:#222; font-family: monospace;'>{{routePerformance.productivity}}</span>
+      </div>
+    {{/each}}
+    </div>
+  {{/if}}
+</div>
+{{yield}}
