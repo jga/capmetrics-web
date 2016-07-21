@@ -1,10 +1,9 @@
 /**
- * Index Controller.
- *
  * @module controllers/index
  */
 import Ember from 'ember';
 
+/** Exports extension of `Ember.Controller` */
 export default Ember.Controller.extend({
   /** A CSS identifier selector.
    *

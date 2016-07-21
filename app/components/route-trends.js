@@ -1,10 +1,8 @@
+/** @module components/route-trends */
 import Ember from 'ember';
 import fillEmptyPoints from 'capmetrics-web/utils/fill-empty-points';
 
 let convertTimeStamps = function(d){
-  //let isotime = d[0];
-  //let format = d3.time.format("%Y-%m-%dT%H:%M:%S%Z");
-  //format.parse(isotime);
   let result = Date.parse(d[0]);
   return result;
 }
@@ -50,12 +48,6 @@ let getContainerHeight = function() {
 
 let createGraphLoader = function(selector, data, chart) {
 
-  // sort keys in ascending alphabetical order
-  //data.sort(function(a, b) {
-    //if (a.key > b.key) { return 1 };
-    //if (a.key < b.key) { return -1 };
-    //return 0;
-  //});
   chart = configureChart(chart);
   let svgContainerHeight = getContainerHeight();
   return function loader() {
@@ -114,9 +106,9 @@ let colorizeTrends = function(prettyData) {
   return prettyData;
 }
 
-// A monday timestamp helps align the x coordinate in the visualization
-// across the days of the week
 let toMondayTimestamp = function(timestamp, dayOfWeek) {
+  // A monday timestamp helps align the x coordinate in the visualization
+  // across the days of the week
   var candidateDate = new Date(timestamp);
   if (dayOfWeek === 'saturday') {
     candidateDate.setDate(candidateDate.getDate() - 5);
@@ -206,10 +198,67 @@ let chartHours = function(productivities) {
   loadChart('service-hour-trend__viz', prettyProductivityData);
 }
 
+/**
+ * Exports extension of `Ember.component`.
+ *
+ * The module has several **private** functions.
+ *
+ * ###### convertTimeStamps(d)
+ *
+ * Returns milliseconds from parsing date string at index zero for passed array.
+ *
+ * ###### configureChart(chart)
+ *
+ * Updates the settings of the passed `nvd3.js` chart. This is where window resizing update settings are for `route-trends` charts.
+ *
+ * Returns updated chart.
+ *
+ * ###### getContainerHeight()
+ *
+ * Returns an integer for container height based on current window size.
+ *
+ * ###### createGraphLoader(selector, data, chart)
+ *
+ * Returns a function that renders an interactive, responsive `nvd3.js` chart passed in the arguments at the selector with the data
+ * that are also passed in the arguments.
+ *
+ * ###### loadChart(selector, data)
+ *
+ * Renders `nvd3.js` chart at selector string with the passed-in data.
+ *
+ * ###### colorizeTrends(prettyData)
+ *
+ * Updates the passed-in array's objects with a color property based on each objects day of week in their `key` property.
+ *
+ * ###### toMondayTimestamp(timestamp, dayOfWeek)
+ *
+ * Returns the ISOString for the Monday of week of the submitted `Date` timestamp.
+ *
+ * ###### prettifyProductivity(riderships)
+ *
+ * Transforms service hour objects into an array of objects keyed to `key` and `values` to facilitate `nvd3.js` chart rendering.
+ *
+ * ###### prettifyProductivity(riderships)
+ *
+ * Transforms daily ridership objects into an array of objects keyed to `key` and `values` to facilitate `nvd3.js` chart rendering.
+ *
+ * ###### chartDailies(riderships)
+ *
+ * Manages ordering and prettifying of daily ridership data before chart rendering.
+ *
+ * ###### chartHours(riderships)
+ *
+ * Manages ordering and prettifying of service hour data before chart rendering.
+ *
+ */
 export default Ember.Component.extend({
+  /** String to main header in UI template. Default: `null` */
   header: null,
+
+  /** Route data object. Keyed to `serviceHourRiderships` and `dailyRiderships`. Default: `null` */
   route: null,
 
+  /** Loads chart rendering or 'Data unavailable' header message */
   didRender() {
     d3.selectAll('.nvd3-svg').remove();
     if (this.get('route')) {

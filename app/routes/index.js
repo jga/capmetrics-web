@@ -1,8 +1,4 @@
-/**
- * Index Route.
- *
- * @module routes/index
- */
+/** @module routes/index */
 import Ember from 'ember';
 import ENV from 'capmetrics-web/config/environment';
 
@@ -47,6 +43,21 @@ let topRouteHandler = function() {
 
 /**
  * Exports extension of Ember's Route class.
+ *
+ * This route handles models for the index feed that
+ * features a system trend visualization, the top 10 ridership routes,
+ * and a menu of route options for further data analysis.
+ *
+ * The module cotains a **private** module function.
+ *
+ * ###### topRouteHandler()
+ *
+ * Sends an AJAX request to the `high-ridership` endpoint and sorts
+ * the responses route compendium JSON objects. The sort is descending by
+ * the latest weekday ridership; the effect is to place the routes with higher
+ * weekday ridership at the top of the feed.
+ *
+ * Returns jQuery AJAX promise that itself returns a sorted array of route compendium data.
  */
 export default Ember.Route.extend({
   activate: function() {
@@ -58,8 +69,11 @@ export default Ember.Route.extend({
     window.onresize = null;
   },
   /**
-   * The model for the route. The function queries for
-   * *all* `system-trend` records and high ridership `daily-ridership` models.
+   * The model for the route. The function peeks for
+   * *all* `system-trend` records, as well as all `route-label` records. Additionally, it issues
+   * an AJAX call for the route compendiums for the top 10 ridership routes.
+   *
+   * @returns {Object} An Ember.RSVP.hash keyed to `routeLabels`, `trends`, and `topRoutes`.
    */
   model() {
     return Ember.RSVP.hash({

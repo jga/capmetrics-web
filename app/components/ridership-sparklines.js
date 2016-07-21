@@ -1,3 +1,4 @@
+/** @module components/ridership-sparklines */
 import Ember from 'ember';
 
 let loadSparkline = function(selector, sparkDataset) {
@@ -14,7 +15,6 @@ let loadSparkline = function(selector, sparkDataset) {
   var sparkHeight = containerHeight - sparkMargins.top - sparkMargins.bottom;
   var sparkWidth = containerWidth - sparkMargins.left - sparkMargins.right;
 
-  //var sparkDateFormatter = d3.time.format("%d-%b-%y");
   var sparkDateFormatter = d3.time.format.iso;
 
   var sparkX = d3.time.scale()
@@ -108,13 +108,37 @@ let loadSparklines = function(routeCompendiums, sparklines) {
   return sparklines;
 }
 
+/**
+ * Exports an extension of `Ember.component`.
+ *
+ * This module has several **private** functions.
+ *
+ * ###### loadSparkline(selector, sparkDataset)
+ *
+ * Renders a sparkline visualization.
+ *
+ * The parameters are a data array and an identifier string that will be used as a CSS selector.
+ *
+ * Returns a `d3` selection.
+ *
+ * ###### loadSparklines(routeCompendiums, sparklines)
+ *
+ * Iterates through route compendium objects to render sparklines.
+ *
+ * The parameters are a data array and an object with already-rendered sparklines keyed to selector labels.
+ *
+ * Returns an updated `sparklines` object.
+ */
 export default Ember.Component.extend({
+  /** Object holds already-renderd `d3` sparklines. Keyed to visualization selector. Default: `null` */
   sparklines: null,
 
+  /** Sets `sparklines` to empty object. */
   didInsertElement() {
     this.set('sparklines', {})
   },
 
+  /** Invokes sparkline rendering */
   didRender() {
     if (this.get('compendiums')) {
       let sparklines = loadSparklines(this.get('compendiums'), this.get('sparklines'));
@@ -122,6 +146,7 @@ export default Ember.Component.extend({
     }
   },
 
+  /** Removes `d3` SVGs */
   willDestroyElement() {
     // remove d3 svg
     if (this.get('sparklines')) {

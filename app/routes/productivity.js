@@ -1,11 +1,21 @@
 /**
- * Productivity Route.
+ * Route for the `productivity` page.
  *
  * @module routes/productivity
  */
 import Ember from 'ember';
 import ENV from 'capmetrics-web/config/environment';
 
+/**
+ * A **private** module function.
+ *
+ * Sends an AJAX request to the `productivity` endpoint.
+ *
+ * Returns a jQuery AJAX promise that itself returns an array of
+ *
+ * @member {Function}
+ *  period (season and year) performance data.
+ */
 let productivityHandler = function() {
   let ajaxSettings = {
     url: ENV.APP.API_HOST + '/productivity',
@@ -24,6 +34,6 @@ export default Ember.Route.extend({
    * JSON object containing an array of period (season and year) performance data.
    */
   model() {
-      return productivityHandler();
+    return productivityHandler();
   }
 });

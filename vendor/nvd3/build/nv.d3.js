@@ -302,12 +302,12 @@ nv.interactiveGuideline = function() {
                     tooltip.hidden(true);
                     return;
                 } else {
-                    // Mutes tooltip if window size below breakpoint
-                    if (showTooltip) {
-                      tooltip.hidden(false);
-                    } else {
-                      tooltip.hidden(true);
-                    }
+                  // Mutes tooltip if window size below breakpoint
+                  if (showTooltip) {
+                    tooltip.hidden(false);
+                  } else {
+                    tooltip.hidden(true);
+                  }
                 }
 
 

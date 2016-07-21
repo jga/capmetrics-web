@@ -1,3 +1,8 @@
+/** @module utils/service-colors */
+
+/**
+ * Exports a plain object with colors keyed to transit service types.
+ */
 export default {
   'CORE - METRORAIL': 'red',
   'CORE - METRORAPID': '#f24d6e',

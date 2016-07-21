@@ -1,7 +1,7 @@
 /**
- * Index Route.
+ * Main application Route.
  *
- * @module routes/index
+ * @module routes/application
  */
 import Ember from 'ember';
 
@@ -11,7 +11,9 @@ import Ember from 'ember';
 export default Ember.Route.extend({
   /**
    * The model for the route. The function queries for
-   * *all* `system-trend` records and *all* `route-label` models.
+   * *all* `system-trend` records and *all* `route-label` records.
+   *
+   * @returns {Object} An Ember.RSVP.hash keyed to `routeLabel` and `trends`.
    */
   model() {
     return Ember.RSVP.hash({

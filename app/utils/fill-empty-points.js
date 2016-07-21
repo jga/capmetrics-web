@@ -1,6 +1,4 @@
 /**
- * Fills empty points in data set to ensure working NVD3 charts
- *
  * @module utils/fill-empty-points
  */
 
@@ -41,13 +39,7 @@ let repairSeries = function(data, timestampInventory) {
   return data;
 }
 
-/**
- * Exports a function.  The expected paramater is an array with NVD3-friendly
- * data objects; specifically, they have `key` and `values` properties.
- *
- * @param {Array} datum NVD3-frendly data objects.
- */
-export default function(datum) {
+let fillEmptyPoints = function(datum) {
   let repairedDatum = []
   let inventory = createTimestampInventory(datum);
   for (let i = 0; i < datum.get('length'); i++) {
@@ -56,3 +48,13 @@ export default function(datum) {
   }
   return repairedDatum;
 }
+
+/**
+ * Exports a plain function.
+ *
+ * The expected `datum` paramater is an array with NVD3-friendly
+ * data objects; specifically, they have `key` and `values` properties.
+ *
+ */
+export default fillEmptyPoints;
+

@@ -1,8 +1,4 @@
-/**
- * Visualizes trends with an area chart.
- *
- * @module components/viz-area-trend
- */
+/** @module components/system-trend */
 import Ember from 'ember';
 import fillEmptyPoints from 'capmetrics-web/utils/fill-empty-points';
 import transitServiceColors from 'capmetrics-web/utils/service-colors';
@@ -102,14 +98,6 @@ let createGraphLoader = function(selector, data, chart) {
   }
 }
 
-/**
- * Handles the creation of a stacked chart visualization.
- *
- * @inner
- * @param {string} title A chart title
- * @param {string} selector An id CSS selector
- * @param {array} data An array of data points for visualization.
- */
 let toStackedChart = function(title, selector, data) {
   let chart = nv.models
                 .stackedAreaChart()
@@ -125,7 +113,46 @@ let toStackedChart = function(title, selector, data) {
   return chart;
 }
 
-/** Exports an extension of Ember's Component class. */
+/**
+ * Exports an extension of Ember's Component class.
+ *
+ * The module has several **private** functions.
+ *
+ * ###### convertTimeStamps(d)
+ *
+ * Returns milliseconds from parsing date string at index zero for passed array.
+ *
+ * ###### configureChart(chart)
+ *
+ * Updates the settings of the passed `nvd3.js` chart. This is where window resizing update settings are for the component's `chart`.
+ *
+ * Returns updated chart.
+ *
+ * ###### getContainerHeight()
+ *
+ * Returns an integer for container height based on current window size.
+ *
+ * ###### createGraphLoader(selector, data, chart)
+ *
+ * Returns a function that renders an interactive, responsive `nvd3.js` chart passed in the arguments at the selector with the data
+ * that are also passed in the arguments.
+ *
+ * ###### colorizeTrends(datum)
+ *
+ * Updates the passed-in array's objects with a color property based on each objects service type in their `key` property.
+ *
+ * ###### toStackedChart(title, selector, data)
+ *
+ * Handles the creation of a stacked chart visualization.
+ *
+ * The function's parameters are:
+ *
+ * - title *A chart title*
+ * - selector *An id CSS selector*
+ * - data *An array of data points for visualization.*
+ *
+ * Returns a `nvd3.js` chart.
+ */
 export default Ember.Component.extend({
   /** A D3-powered visualization. */
   chart: null,

@@ -1,3 +1,4 @@
+/** @module components/productivity-squares */
 import Ember from 'ember';
 import productivityColors from 'capmetrics-web/utils/productivity-colors';
 
@@ -95,14 +96,49 @@ var loadSquareVisualization = function(dataSeries, visLabel) {
 }
 
 
+/**
+ * Exports extension of `Ember.component`.
+ *
+ * The module has several **private** functions.
+ *
+ * ###### getDimensions(windowWidth)
+ *
+ * Generates an object with dimension data based on passed width number.
+ *
+ * Returns an object with `squareGap`, `squareEdge`, `marginTop`, `marginBottom`, `marginRight`, `marginLeft`, `width`, `height`, `visHeight`, `visWidth` keys.
+ *
+ * ###### getWindowWidth()
+ *
+ * Returns browser window's `innerWidth`.
+ *
+ * ###### colorize(value)
+ *
+ * Returns string with CSS color based on day of week value passed.
+ *
+ * ###### loadSquareVisualization(dataSeries, visLabel)
+ *
+ * Renders a square distribution/waffle visualization.
+ *
+ * The parameters are a data array and an identifier string that will be used as a CSS selector.
+ *
+ * Returns a `d3` selection.
+ */
 export default Ember.Component.extend({
 
+  /**
+   * Component actions object.
+   *
+   * ###### toggleDetail()
+   *
+   * Toggles the `showDetail` boolean.
+   */
   actions: {
     toggleDetail() {
       this.toggleProperty('showDetail');
     }
   },
 
+  /** Loads square visualization */
   didRender() {
     if (this.get('periodPerformance')) {
       let dataSeries = this.get('periodPerformance')['performance']
@@ -114,8 +150,10 @@ export default Ember.Component.extend({
     }
   },
 
+  /** Period performance object. Default: `null`. */
   periodPerformance: null,
 
+  /** Computes a string with a month name and four-digit year*/
   prettyDate: Ember.computed('periodPerformance', function() {
     if (this.get('periodPerformance')) {
       let monthNames = ["January", "February", "March", "April", "May", "June",
@@ -127,10 +165,13 @@ export default Ember.Component.extend({
     }
   }),
 
+  /** Boolean governs whether data details are displayed. Default: `false` */
   showDetail: false,
 
+  /** The `d3` square distribution object. Default: `null` */
   squareVisualization: null,
 
+  /** Computes an identifier string for CSS selection of a DOM element. */
   squareVisualizationIdentifier: Ember.computed('periodPerformance', function() {
     if (this.get('periodPerformance')) {
       let periodDate = new Date(this.get('periodPerformance')['date']);
@@ -140,6 +181,7 @@ export default Ember.Component.extend({
     }
   }),
 
+  /** Removes `d3` SVG and resize event listener. */
   willDestroyElement() {
     // remove d3 svg
     if (this.get('squareVisualization')) {

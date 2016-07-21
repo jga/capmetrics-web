@@ -1,12 +1,4 @@
 /**
- * The application's router.
- *
- * The handled routes are:
- *
- * | **Route**    | **Path**   |
- * |--------------|------------|
- * | index        | `/`        |
- *
  * @module router
  */
 import Ember from 'ember';
@@ -25,4 +17,19 @@ Router.map(function() {
   this.route('about');
 });
 
+/**
+ * Exports an extension of `Ember.Router`
+ *
+ * The application's router mapping handles the following routes:
+ *
+ * | **Route**              | **Path**                            |
+ * |------------------------|-------------------------------------|
+ * | index                  | `/`                                 |
+ * | productivity           | `/productivity`                     |
+ * | route-performance      | `/route-performance/:route_number`  |
+ * | routes                 | `/routes`                           |
+ * | system                 | `/system`                           |
+ * | about                  | `/about`                            |
+ *
+ */
 export default Router;

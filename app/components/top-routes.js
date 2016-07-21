@@ -1,3 +1,4 @@
+/** @module components/top-routes */
 import Ember from 'ember';
 import fillEmptyPoints from 'capmetrics-web/utils/fill-empty-points';
 import DayOfWeekColors from 'capmetrics-web/utils/day-of-week-colors';
@@ -155,14 +156,62 @@ let loadCharts = function(routeCompendiums, charts) {
   return charts;
 }
 
+/**
+ * Exports extension of `Ember.component`.
+ *
+ * The module has several **private** functions.
+ *
+ * ###### convertTimeStamps(d)
+ *
+ * Returns milliseconds from parsing date string at index zero for passed array.
+ *
+ * ###### configureChart(chart)
+ *
+ * Updates the settings of the passed `nvd3.js` chart. This is where window resizing update settings are for `top-routes` charts.
+ *
+ * Returns updated chart.
+ *
+ * ###### getContainerHeight()
+ *
+ * Returns an integer for container height based on current window size.
+ *
+ * ###### createGraphLoader(selector, data, chart)
+ *
+ * Returns a function that renders an interactive, responsive `nvd3.js` chart passed in the arguments at the selector with the data
+ * that are also passed in the arguments.
+ *
+ * ###### loadChart(selector, data)
+ *
+ * Renders `nvd3.js` chart at selector string with the passed-in data.
+ *
+ * ###### colorizeTrends(prettyData)
+ *
+ * Updates the passed-in array's objects with a color property based on each objects day of week in their `key` property.
+ *
+ * ###### toMondayTimestamp(timestamp, dayOfWeek)
+ *
+ * Returns the ISOString for the Monday of week of the submitted `Date` timestamp.
+ *
+ * ###### prettifyRiderships(riderships)
+ *
+ * Transforms daily ridership objects into an array of objects keyed to `key` and `values` to facilitate `nvd3.js` chart rendering.
+ *
+ * ###### loadCharts(routeCompendiums, charts)
+ *
+ * Manages rendering of `nvd3.js` charts.
+ *
+ */
 export default Ember.Component.extend({
 
+  /** Rendered charts object. Keyed to selector label. */
   charts: null,
 
+  /** Sets charts to empty object. */
   didInsertElement() {
     this.set('charts', {})
   },
 
+  /** Calls chart loading after component renders. */
   didRender() {
     if (this.get('routeCompendiums')) {
       let routeCompendiums = this.get('routeCompendiums');

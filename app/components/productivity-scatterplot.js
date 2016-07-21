@@ -1,4 +1,6 @@
+/** @module components/productivity-scatterplot */
 import Ember from 'ember';
+
 
 var updateDimensions = function(windowWidth) {
   let availableWidth = Math.round(windowWidth * 0.8);
@@ -16,8 +18,8 @@ var updateDimensions = function(windowWidth) {
   return dimensions;
 }
 
-var loadScatterVisualization = function(dataSeries, visLabel) {
 
+var loadScatterVisualization = function(dataSeries, visLabel) {
     // extents
     var yExtent = d3.extent(dataSeries, function(d) { return d.productivity ? d.productivity : 0; })
     var xExtent = d3.extent(dataSeries, function(d) { return d.ridership ? d.ridership : 0; })
@@ -77,6 +79,7 @@ var loadScatterVisualization = function(dataSeries, visLabel) {
                    .range([0, 255])
                    .domain([0, yExtent[1]])
 
+    // Provides color for data point circle "border"
     var colorize = function(ridership, productivity) {
       var productivityColor = productivityColorScale(productivity);
       var ridershipColor = Math.round(ridershipColorScale(ridership) - (3 * productivityColor));
@@ -85,6 +88,7 @@ var loadScatterVisualization = function(dataSeries, visLabel) {
       return finalColor;
     }
 
+    // Provides color for data point circle "fill"
     var brightColorize = function(ridership, productivity) {
       var productivityColor = productivityColorScale(productivity);
       var ridershipColor = Math.round(ridershipColorScale(ridership) - productivityColor);
@@ -166,20 +170,47 @@ var loadScatterVisualization = function(dataSeries, visLabel) {
     }
 
     render();
+    //re-render on resize events
     let eventType = 'resize.' + visLabel;
     d3.select(window).on(eventType, render);
     return svgContainer;
 }
 
 
+/** Exports extension of `Ember.component`.
+ *
+ * The module has two **private** functions.
+ *
+ * ###### updateDimensions(windowWidth)
+ *
+ * Generates an object with dimension data based on passed width number.
+ *
+ * Returns an object with `marginTop`, `marginBottom`, `marginRight`, `marginLeft`, `width`, `height`, `visHeight`, `visWidth` keys.
+ *
+ * ###### loadScatterVisualization(dataSeries, visLabel)
+ *
+ * Renders a scatterplot.
+ *
+ * The parameters are a data array and an identifier string that will be used as a CSS selector.
+ *
+ * Returns a `d3` selection.
+ */
 export default Ember.Component.extend({
 
+  /**
+   * Component actions object.
+   *
+   * ###### toggleDetail()
+   *
+   * Toggles the `showDetail` boolean.
+   */
   actions: {
     toggleDetail() {
       this.toggleProperty('showDetail');
     }
   },
 
+  /** Loads scatterplot visualization */
   didRender() {
     if (this.get('periodPerformance')) {
       var dataSeries = this.get('periodPerformance')['performance']
@@ -191,6 +222,7 @@ export default Ember.Component.extend({
     }
   },
 
+  /** Computes most recent period performance object */
   periodPerformance: Ember.computed('periodPerformances', function() {
     if (this.get('periodPerformances')) {
       return this.get('periodPerformances')[0];
@@ -199,6 +231,7 @@ export default Ember.Component.extend({
     }
   }),
 
+  /** Computes most recent performance data series */
   latestPerformance: Ember.computed('periodPerformance', function() {
     if (this.get('periodPerformance')) {
       return this.get('periodPerformance.performance');
@@ -207,6 +240,7 @@ export default Ember.Component.extend({
     }
   }),
 
+  /** Computes a string with a month name and four-digit year*/
   prettyDate: Ember.computed('periodPerformance', function(){
     if (this.get('periodPerformance')) {
       var monthNames = ["January", "February", "March", "April", "May", "June",
@@ -218,10 +252,13 @@ export default Ember.Component.extend({
     }
   }),
 
+  /** Boolean governs whether data details are displayed. Default: `false` */
   showDetail: false,
 
+  /** The `d3` scatterplot object. Default: `null` */
   scatterVisualization: null,
 
+  /** Computes an identifier string for CSS selection of a DOM element. */
   scatterVisualizationIdentifier: Ember.computed('periodPerformance', function(){
     if (this.get('periodPerformance')) {
       let periodDate = new Date(this.get('periodPerformance')['date']);
@@ -231,6 +268,7 @@ export default Ember.Component.extend({
     }
   }),
 
+  /** Removes `d3` SVG and resize event listener. */
   willDestroyElement() {
     // remove d3 svg
     if (this.get('scatterVisualization')) {

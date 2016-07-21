@@ -1,6 +1,9 @@
+/** @module serializers/system-trend */
 import JSONAPISerializer from 'ember-data/serializers/json-api';
 
+/** Exports extension of `JSONAPISerializer` */
 export default JSONAPISerializer.extend({
+  /** Transforms ridership floats from API into integers */
   normalize(modelClass, resourceHash) {
     let originalTrend = JSON.parse(resourceHash.attributes.trend);
     let cleanTrend = []
