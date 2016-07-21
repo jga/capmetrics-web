@@ -1,4 +1,12 @@
 /**
+ * @module models/system-trend
+ */
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+
+/**
+ * Exports an exension of the Ember Data `Model` class.
+ *
  * Provides convenient trend data for a *type* of transit service.
  *
  * ### **Model Fields**
@@ -9,13 +17,6 @@
  * | `serviceType`| String     |
  * | `trend`      | JSON       |
  *
- * @module models/system-trend
- */
-import Model from 'ember-data/model';
-import attr from 'ember-data/attr';
-
-/**
- * Exports an exension of the Ember Data `Model` class.
  */
 export default Model.extend({
     /** When the model was last updated.
