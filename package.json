@@ -1,6 +1,6 @@
 {
   "name": "capmetrics-web",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Web application featuring visualizations of CMTA performance data.",
   "private": true,
   "directories": {
