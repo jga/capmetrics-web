@@ -13,7 +13,7 @@
   "source": {
       "include": ["app", "app/adapters", "app/components", "app/controllers", "app/helpers",
         "app/models", "app/routes", "app/serializers", "app/utils"],
-      "exclude": ["cmx--web-theme", "bower_components", "app/mirage", "node_modules",
+      "exclude": ["cmx-web-theme", "bower_components", "app/mirage", "node_modules",
         "public", "seeders", "tests", "tmp", "vendor", "app.js"],
       "includePattern": ".+\\.js(doc)?$",
       "excludePattern": "(^|\\/|\\\\)_"
